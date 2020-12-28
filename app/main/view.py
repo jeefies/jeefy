@@ -5,9 +5,9 @@ import base64
 
 from ..imps import *
 from ..paths import JDB
-from ..models import User
+#from ..models import User
 
-User = User(JDB, 'user')
+#User = User(JDB, 'user')
 
 __all__ = ('index', "_pic")
 

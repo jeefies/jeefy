@@ -1,5 +1,5 @@
-from Jdb import Model
+#from Jdb import Model
 
-class User(Model):
-    __cols__ = ('email', 'name', 'birth',
-            ('sex', int), 'coutry', 'desc')
+#class User(Model):
+#    __cols__ = ('email', 'name', 'birth',
+#            ('sex', int), 'coutry', 'desc')
