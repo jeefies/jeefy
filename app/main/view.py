@@ -5,21 +5,12 @@ import base64
 
 from ..imps import *
 from ..paths import JDB
-#from ..models import User
-
-#User = User(JDB, 'user')
+from ..reg import regist as reg
 
 __all__ = ('index', "_pic")
 
 def regist(app):
-    def _reg(func):
-        method = getattr(func, 'method', ['GET'])
-        name = func.__name__
-        rule = getattr(func, 'rule')
-        app.add_url_rule(rule, name, func, methods = method)
-
-    for k in __all__:
-        _reg(globals()[k])
+    reg(app, globals(), __all__)
 
 def index():
 

@@ -16,4 +16,7 @@ def create_app(cfg):
     from .main import main as main_bp
     app.register_blueprint(main_bp)
 
+    from .christs import chri as chri_bp
+    app.register_blueprint(chri_bp, url_prefix="/chris")
+
     return app
