@@ -2,3 +2,4 @@ jeefy_database
 gunicorn
 flask
 flask-bootstrap
+flask-moment
