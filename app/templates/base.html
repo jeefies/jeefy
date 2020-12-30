@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	{% block html %}
+	<head>
+		{% block head %}
+		<title>Jeefy - {% block title %}Home{% endblock %}</title>
+
+		{% block icon %}
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico' )}}" type='image/x-icon'>
+		<link rel="icon" href="{{ url_for('static', filename='favicon.ico' )}}" type="image/x-icon">
+		{% endblock icon %}
+
+		{% block metas %}
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		{% endblock metas %}
+
+		{% block styles %}
+		<link href="{{ url_for('static', filename="bootstrap/css/bootstrap.css")}}" />
+		{% endblock styles%}
+
+		{% endblock head %}
+	</head>
+	<body>
+		{% block body %}
+
+		{% block navbar %}
+		<div class="container">
+			{% for msg in get_flashed_messages() %}
+			<div class='alert alert-info' style="background: rgb(0, 200, 250); width: auto; display: inline-block">
+				{{ msg }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+			{% endfor %}
+		</div>
+		{% endblock navbar %}
+
+		{% block content %}
+		{% endblock content %}
+
+		{% endblock body %}
+
+		{% block scripts %}
+		<script src="{{ url_for('static', filename='bootstrap/jquery.js')}}"></script>
+		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
+		{% endblock scripts %}
+	</body>
+	{% endblock html %}
+</html>

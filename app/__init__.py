@@ -19,4 +19,7 @@ def create_app(cfg):
     from .christs import chri as chri_bp
     app.register_blueprint(chri_bp, url_prefix="/chris")
 
+    from .file import file as file_bp
+    app.register_blueprint(file_bp, url_prefix="/f")
+
     return app
