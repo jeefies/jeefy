@@ -1,5 +1,6 @@
-jeefy_database
 gunicorn
+jedb
 flask
 flask-bootstrap
 flask-moment
+flask-wtf
