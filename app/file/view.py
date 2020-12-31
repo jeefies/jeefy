@@ -52,10 +52,7 @@ def defn(fn):
 
 def download():
     f = [(url_for('.readf', fn=enfn(f)), f) for f in Files.listname()]
-    try:
-        fn = f[0][1]
-        Files.read(fn)
-    except:pass
+    print(f)
     return render_template('file/files.html', files=f)
 
 download.rule = "/files"
