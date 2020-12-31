@@ -16,8 +16,12 @@
 		{% endblock metas %}
 
 		{% block styles %}
-		<link href="{{ url_for('static', filename="bootstrap/css/bootstrap.css")}}" />
+		<link href="{{ url_for('static', filename="bootstrap/css/bootstrap.css")}}" rel="stylesheet">
 		{% endblock styles%}
+		
+		{% block haedscripts %}
+		<script src="{{ url_for('static', filename='js/mine.js')}}"></script>
+		{% endblock haedscripts %}
 
 		{% endblock head %}
 	</head>
@@ -25,9 +29,28 @@
 		{% block body %}
 
 		{% block navbar %}
+		<div class="navbar navbar-inverse" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle"
+						data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="{{ url_for('main.index') }}">Jeefy</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url_for('file.index') }}">Download</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
 		<div class="container">
 			{% for msg in get_flashed_messages() %}
-			<div class='alert alert-info' style="background: rgb(0, 200, 250); width: auto; display: inline-block">
+			<div class='alert alert-info'>
 				{{ msg }}
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 			</div>
@@ -35,14 +58,16 @@
 		</div>
 		{% endblock navbar %}
 
+		<div class="container">
 		{% block content %}
 		{% endblock content %}
+		</div>
 
 		{% endblock body %}
 
 		{% block scripts %}
-		<script src="{{ url_for('static', filename='bootstrap/jquery.js')}}"></script>
-		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
+		<script src="{{ url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
+		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js')}}"></script>
 		{% endblock scripts %}
 	</body>
 	{% endblock html %}

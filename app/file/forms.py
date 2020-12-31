@@ -9,6 +9,4 @@ class FileForm(FlaskForm):
 
     @classmethod
     def iupdate(cls):
-        cls.file = FileField("Please Choose a file you'd like to upload",
-            validators = [DataRequired(message = 'There no FILE input!')])
-        cls.submit = SubmitField('upload')
+        cls.file.data = None 
