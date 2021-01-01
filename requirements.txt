@@ -1,5 +1,4 @@
 gunicorn
-jedb
 jetar-zip
 flask
 flask-bootstrap
