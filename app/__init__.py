@@ -9,6 +9,7 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 
 def create_app(cfg):
+    print(cfg)
     app = Flask(__name__)
     conf = config[cfg]
     app.config.from_object(conf)
