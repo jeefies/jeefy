@@ -13,6 +13,7 @@ def create_app(cfg):
     conf = config[cfg]
     app.config.from_object(conf)
     conf.init_app(app)
+    print(conf.SQLALCHEMY_DATABSE_URI)
 
     if app.config.get('SSL_REDIRECT', False):
         print('redirect')

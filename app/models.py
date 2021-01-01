@@ -39,3 +39,11 @@ class File(db.Model):
 
     def __repr__(self):
         return "<File %r to %r.gz>" % self.fn
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(20), unique=True)
+    email = db.Column(db.String(32), unique=True)
+    age = db.Column(db.Integer)
+    country = db.Column(db.String(10))
