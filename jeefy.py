@@ -14,6 +14,10 @@ def make():
 def deploy():
     upgrade()
 
+@app.cli.command()
+def crt():
+    db.create_all()
+
 if __name__ == '__main__':
         try:
             app.run('0.0.0.0', 80)
