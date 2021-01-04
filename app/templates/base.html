@@ -20,6 +20,7 @@
 		{% endblock styles%}
 		
 		{% block haedscripts %}
+		<script src="{{ url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
 		<script src="{{ url_for('static', filename='js/mine.js')}}"></script>
 		{% endblock haedscripts %}
 
@@ -43,12 +44,15 @@
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
+						<li><a href="{{ url_for('user.index') }}">User</a></li>
 						<li><a href="{{ url_for('mfile.index') }}">Download</a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 		<div class="container">
+			<h2>Hello {% if current_user.is_authenticated %}{{ current_user.name }}
+				{% else %}Stranger{% endif %}</h2>
 			{% for msg in get_flashed_messages() %}
 			<div class='alert alert-info'>
 				{{ msg }}
@@ -66,9 +70,9 @@
 		{% endblock body %}
 
 		{% block scripts %}
-		<script src="{{ url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
 		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js')}}"></script>
 		{% endblock scripts %}
+
 	</body>
 	{% endblock html %}
 </html>

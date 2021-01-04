@@ -1,4 +1,4 @@
-from .bp import file
+from .bp import mfile
 from .view import regist
 
-regist(file)
+regist(mfile)

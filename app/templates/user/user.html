@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block tit %}User - {{ user.name }}{% endblock %}
+
+{% block content %}
+<p>Name: {{ user.name }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Role: {{ user.role.name }}</p>
+<p>Id: {{ user.id }}</p>
+{% endblock %}

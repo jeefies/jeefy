@@ -4,7 +4,7 @@ base = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", 'hard to guess key')
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(base, 'data.sqlite')
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(base, 'data2.sqlite')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     @staticmethod
