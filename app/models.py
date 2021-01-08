@@ -76,7 +76,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(20), unique=True, nullable = False)
     email = db.Column(db.String(32), unique=True, nullable = False)
-    age = db.Column(db.Integer)
+    birth = db.Column(db.Date)
     password = db.Column(db.String(20))
     #locale = db.Column(db.String(32))
     sex = db.Column(db.SmallInteger)
@@ -120,6 +120,12 @@ class User(UserMixin, db.Model):
                 permission = self.permission,
                 description = self.desc,
                 url = "/user/%r" % self.id)
+
+    def mkd(self):
+        if self.desc:
+            return markdown(self.desc)
+        else:
+            return 'Err... The user is too lazy that left no descriptions'
 
 @loginmanager.user_loader
 def load_user(user_id):

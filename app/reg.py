@@ -1,3 +1,6 @@
+from flask import flash, redirect, url_for
+
+
 def regist(app, gls, all_):
     def _reg(func):
         method = getattr(func, 'method', ['GET'])
@@ -7,3 +10,7 @@ def regist(app, gls, all_):
 
     for k in all_:
         _reg(gls[k])
+
+def unauthorized_handler():
+    flash("Please Log in First!")
+    return redirect(url_for('user.loginpage'))

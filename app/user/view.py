@@ -6,7 +6,7 @@ from ..models import User, Role
 from ..imps import *
 from .. import db
 from .bp import user
-from .forms import RegistForm, LoginForm
+from .forms import RegistForm, LoginForm, DetailForm
 
 
 @user.route('/new', methods = ["GET", "POST"])
@@ -23,11 +23,11 @@ def regist():
         elif User.query.filter_by(email = email).all():
             flash("The email is already in used")
             return redirect(url_for('.index'))
-        user = User(name = name, email = email, role = admin, age = 1, password = pwd)
+        user = User(name = name, email = email, role = admin, password = pwd)
         db.session.add(user)
         db.session.commit()
         flash("regist success")
-        return redirect(url_for('.index'))
+        return redirect(url_for('.loginpage'))
     return render_template('user/regist.html', form = form)
 
 @user.route('/login/<name>/<password>')
@@ -51,6 +51,21 @@ def loginpage():
             url += "?remember=1"
         return redirect(url)
     return render_template("user/login.html", form = form)
+
+@user.route('/user-detail', methods = ["GET", "POST"])
+@login_required
+def loginmore():
+    user = current_user
+    form = DetailForm()
+    """if not name:
+        flash("Witch user?")
+        return redirect('/')"""
+    if form.validate_on_submit():
+        print(form.birth.data)
+        print(form.sex.data)
+        print(form.desc.data)
+        return redirect(url_for(".loginmore"))
+    return render_template("user/detail.html", form = form)
 
 @user.route('/logout')
 @login_required

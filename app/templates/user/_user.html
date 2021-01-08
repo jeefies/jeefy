@@ -1,0 +1,9 @@
+{% macro showuser(user) %}
+<div>
+	<p>Name: {{ user.name }}</p>
+	<p>Email: {{ user.email }}</p>
+	<p>Role: {{ user.role.name }}</p>
+	<p>Id: {{ user.id }}</p>
+	<p style="font-size: 1.5em; border-top: thin black solid">{{ user.mkd() }}</p><br>
+</div>
+{% endmacro %}

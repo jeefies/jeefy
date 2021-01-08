@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField, \
+        TextAreaField, DateTimeField, DateField, RadioField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, Regexp
+from flask_pagedown.fields import PageDownField
 
 class RegistForm(FlaskForm):
     name = StringField("Name:", validators = [DataRequired()])
@@ -15,3 +17,9 @@ class LoginForm(FlaskForm):
     pwd = PasswordField("Password:", validators = [DataRequired()])
     rem = BooleanField("Keep logged in")
     submit = SubmitField("Login")
+
+class DetailForm(FlaskForm):
+    birth = DateField("Birthday")
+    sex = RadioField("Gender", [DataRequired()], choices = (("Male", "Male"), ("Female", "Female")), default="Male")
+    desc = PageDownField("Description to yourself(markdown type)", validators = [DataRequired()], rows= 5)
+    submit = SubmitField("Verify")

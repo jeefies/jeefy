@@ -47,6 +47,19 @@
 						<li><a href="{{ url_for('user.index') }}">User</a></li>
 						<li><a href="{{ url_for('mfile.index') }}">Download</a></li>
 					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						{% if current_user.is_authenticated %}
+						<li><a href="{{ url_for('user.logout') }}">Log Out</a></li>
+						{% else %}
+						<li class="dropdown">
+							<a href="" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="{{ url_for('user.regist') }}">Regist</a></li>
+								<li><a href="{{ url_for('user.loginpage') }}">Log In</a></li>
+							</ul>
+						</li>
+						{% endif %}
+					</ul>
 				</div>
 			</div>
 		</div>

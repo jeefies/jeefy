@@ -3,13 +3,19 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_pagedown import PageDown
 from config import config
+from .reg import unauthorized_handler
 
 moment = Moment()
 bootstrap = Bootstrap()
 db = SQLAlchemy()
+pagedown = PageDown()
+# login manager config
 loginmanager = LoginManager()
 loginmanager.login_view = 'user.login'
+loginmanager.login_message = "Please log in first!"
+loginmanager.unauthorized_callback = unauthorized_handler
 
 def create_app(cfg):
     print(cfg)
@@ -28,6 +34,7 @@ def create_app(cfg):
     bootstrap.init_app(app)
     db.init_app(app)
     loginmanager.init_app(app)
+    pagedown.init_app(app)
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)
