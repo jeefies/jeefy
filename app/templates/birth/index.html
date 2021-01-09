@@ -15,7 +15,12 @@
 var snd = document.getElementById('snd');
 var ctx = document.getElementById('ctx');
 var img = document.getElementById('img');
-var sents = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,6,7,7,8,3,2];
+var sents = ["寒假就要到了吧，冬天的苏州园林又会是怎样？", "我不知道，我们都不知道",
+	     "成都，多年不下一场雪，而如今...", "漫天飞絮，雪漫天寒，也出现了草丛上的飞雪", 
+	     "来自上天的雪，可也落到了此地？", "愿常见，不别", 
+	     "生日之歌，以银铃之声唱响", "什么时候能见嫂子也是个问题", 
+	     "不过，正事还是，<b>生日快乐</b>", "在此等候，19已至", 
+	     "曾有张晓风之不识", "今有你我之亲情"];
 var imgs = [{{linker('suzhouyuanling1.jpeg')}}, {{linker('suzhouyuanling2.jpeg')}},
 	{{linker('xijiaoliwupu1.jpg')}}, {{linker('xijiaoliwupu2.jpeg')}},
 	{{linker('happybirthday1.jpg')}}, {{linker('heart.jpeg')}}];
@@ -28,17 +33,17 @@ snd.onplaying = function(){
 	snd.currentTime = 0;
 	snd.removeAttribute('controls');
 	snd.innerHTML = ""
-	ctx.innerText = "生日快乐！ 等等...";
-	setTimeout((event) => ctx.innerText = "准备好了，我们开始吧！", 3000);
+	ctx.innerHTML = "生日快乐！ 等等...";
+	setTimeout((event) => ctx.innerHTML = "准备好了，我们开始吧！", 3000);
 	snd.pause();
 	// 3.6s 8拍
 	t = 7270
 	function ct(i) {
 		if (i >= imgs.length) {return};
 		img.src = imgs[i];
-		ctx.innerText = sents[i * 2];
+		ctx.innerHTML = sents[i * 2];
 		console.log(i)
-		setTimeout(function() { ctx.innerText = sents[i * 2 + 1]}, t / 2);
+		setTimeout(function() { ctx.innerHTML = sents[i * 2 + 1]}, t / 2);
 		setTimeout((event) => ct(i + 1), t);
 	}
 	setTimeout(() => {snd.play();setTimeout(() => ct(0), t / 8)}, t)
