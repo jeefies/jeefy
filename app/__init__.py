@@ -54,4 +54,7 @@ def create_app(cfg):
     from .js import js as js_bp
     app.register_blueprint(js_bp, url_prefix = "/js")
 
+    from .birth import birth as birth_bp
+    app.register_blueprint(birth_bp, url_prefix = "/birth")
+
     return app

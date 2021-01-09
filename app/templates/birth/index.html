@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block tit %}Hi 付勇川{% endblock %}
+
+{% macro linker(img) %}
+	"{{ url_for('static', filename = 'imgs/' + img)}}"
+{% endmacro %}
+
+{% block content %}
+<audio src="{{ url_for('static', filename='sound/star-sky.mp3')}}" controls="controls" id="snd"></audio>
+<p id="ctx">Start with you!</p>
+<img id="img" style="width: 100%; display: inline-block"></img>
+<script>
+var snd = document.getElementById('snd');
+var ctx = document.getElementById('ctx');
+var img = document.getElementById('img');
+var sents = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,6,7,7,8,3,2];
+var imgs = [{{linker('suzhouyuanling1.jpeg')}}, {{linker('suzhouyuanling2.jpeg')}},
+	{{linker('xijiaoliwupu1.jpg')}}, {{linker('xijiaoliwupu2.jpeg')}},
+	{{linker('happybirthday1.jpg')}}, {{linker('heart.jpeg')}}];
+console.log(imgs)
+var s = 0;
+//snd.play(); Must interact
+snd.onplaying = function(){
+	if (s != 0) {return}
+	s = 1;
+	snd.currentTime = 0;
+	snd.removeAttribute('controls');
+	snd.innerHTML = ""
+	ctx.innerText = "生日快乐！ 等等...";
+	setTimeout((event) => ctx.innerText = "准备好了，我们开始吧！", 3000);
+	snd.pause();
+	// 3.6s 8拍
+	t = 7270
+	function ct(i) {
+		if (i >= imgs.length) {return};
+		img.src = imgs[i];
+		ctx.innerText = sents[i * 2];
+		console.log(i)
+		setTimeout(function() { ctx.innerText = sents[i * 2 + 1]}, t / 2);
+		setTimeout((event) => ct(i + 1), t);
+	}
+	setTimeout(() => {snd.play();setTimeout(() => ct(0), t / 8)}, t)
+}
+</script>
+{% endblock %}

@@ -19,7 +19,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Login")
 
 class DetailForm(FlaskForm):
-    birth = DateField("Birthday")
+    birth = DateField("Birthday (YYYY-MM-DD)")
     sex = RadioField("Gender", [DataRequired()], choices = (("Male", "Male"), ("Female", "Female")), default="Male")
-    desc = PageDownField("Description to yourself(markdown type)", validators = [DataRequired()], rows= 5)
+    desc = TextAreaField("Description to yourself(markdown type)", validators = [DataRequired()], rows= 5, id="pgArea")
     submit = SubmitField("Verify")

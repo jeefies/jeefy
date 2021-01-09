@@ -97,5 +97,5 @@ def listus():
 @user.route('/self')
 @login_required
 def self():
-    return redirect(url_for('.user', name = current_user.name))
+    return redirect(url_for('.see', name = current_user.name))
 

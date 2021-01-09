@@ -1,12 +1,13 @@
 var selfurl;
 var dataurl;
 
+/*
 $.get('/urls', {}, function(result) {
 	selfurl = result["self"];
 	dataurl = result["data"];
 	console.log(selfurl, dataurl);
 })
-
+*/
 
 function logcookie() {
 	console.log(document.cookie);
