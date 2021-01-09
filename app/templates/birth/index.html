@@ -8,23 +8,25 @@
 {% endmacro %}
 
 {% block content %}
-<audio src="{{ url_for('static', filename='sound/star-sky.mp3')}}" controls="controls" id="snd"></audio>
-<p id="ctx">Start with you!</p>
+<audio src="http://m10.music.126.net/20210109200049/aa02117725edc2b2650cfbf8d3effc24/ymusic/fde0/06c2/f6ab/08f81111fda21ed94a1378ceb86dcbe7.mp3" controls="controls" id="snd"></audio>
+<p id="ctx" style="font-size: 1.5em"><small>Start with you!</small></p>
 <img id="img" style="width: 100%; display: inline-block"></img>
 <script>
 var snd = document.getElementById('snd');
 var ctx = document.getElementById('ctx');
 var img = document.getElementById('img');
 var sents = ["寒假就要到了吧，冬天的苏州园林又会是怎样？", "我不知道，我们都不知道",
-	     "成都，多年不下一场雪，而如今...", "漫天飞絮，雪漫天寒，也出现了草丛上的飞雪", 
+	     "成都，多年不下一场雪，而如今...", "<b>漫天飞絮，雪漫天寒，也出现了草丛上的飞雪</b>", 
 	     "来自上天的雪，可也落到了此地？", "愿常见，不别", 
-	     "生日之歌，以银铃之声唱响", "什么时候能见嫂子也是个问题", 
-	     "不过，正事还是，<b>生日快乐</b>", "在此等候，19已至", 
-	     "曾有张晓风之不识", "今有你我之亲情"];
-var imgs = [{{linker('suzhouyuanling1.jpeg')}}, {{linker('suzhouyuanling2.jpeg')}},
-	{{linker('xijiaoliwupu1.jpg')}}, {{linker('xijiaoliwupu2.jpeg')}},
-	{{linker('happybirthday1.jpg')}}, {{linker('heart.jpeg')}}];
-console.log(imgs)
+	     "生日之歌，以<b>银铃之声</b>唱响", "什么时候能见<b><em>嫂子</em></b>也是个问题", 
+	     "不过，正事还是，<strong>生日快乐</strong>", "在此等候，<b>十九</b>已至", 
+	     "曾有张晓风之<b>不识</b>", "今有你我之<b>情深</b>"];
+var imgs = ["https://pic.liesio.com/2021/01/09/d85ce6c693df7.jpeg",
+	"https://pic.liesio.com/2021/01/09/f17e0f5899954.jpeg",
+	"https://pic.liesio.com/2021/01/09/b1329a003aa0e.jpeg",
+	"https://pic.liesio.com/2021/01/09/8a76b9bb9ea46.jpg",
+	"https://pic.liesio.com/2021/01/09/d67f92ce12799.jpg",
+	"https://pic.liesio.com/2020/12/24/83daa76cd7b61.jpeg"];
 var s = 0;
 //snd.play(); Must interact
 snd.onplaying = function(){
@@ -42,7 +44,6 @@ snd.onplaying = function(){
 		if (i >= imgs.length) {return};
 		img.src = imgs[i];
 		ctx.innerHTML = sents[i * 2];
-		console.log(i)
 		setTimeout(function() { ctx.innerHTML = sents[i * 2 + 1]}, t / 2);
 		setTimeout((event) => ct(i + 1), t);
 	}
