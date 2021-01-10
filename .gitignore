@@ -3,5 +3,6 @@ build
 dist
 env
 *.swp
+*.swo
 *.sqlite
 migrations
