@@ -13,7 +13,7 @@ from .forms import RegistForm, LoginForm, DetailForm
 def regist():
     form = RegistForm()
     if form.validate_on_submit():
-        admin = Role.query.filter_by(name = 'admin').first()
+        admin = Role.query.filter_by(name = 'Admin').first()
         name = form.name.data
         email = form.name.data
         pwd = form.pwd.data
@@ -61,10 +61,16 @@ def loginmore():
         flash("Witch user?")
         return redirect('/')"""
     if form.validate_on_submit():
-        print(form.birth.data)
-        print(form.sex.data)
-        print(form.desc.data)
-        return redirect(url_for(".loginmore"))
+        user.birth = form.birth.data
+        s = form.sex.data
+        user.sex = 0 if s == "Male" else 1
+        user.desc = form.desc.data
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for(".self"))
+    form.birth.data = user.birth
+    form.sex.data = user.sex
+    form.desc.data = user.desc
     return render_template("user/detail.html", form = form)
 
 @user.route('/logout')
@@ -83,7 +89,7 @@ def see(name):
 def index():
     return render_template('user/index.html')
 
-@user.route('/list')
+@user.route('/--list')
 def listus():
     if req.args.get('self') == 'true':
         try:

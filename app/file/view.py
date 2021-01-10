@@ -14,6 +14,8 @@ from ..imps import *
 from ..reg import regist as reg
 from ..models import File, User
 
+from flask_login import current_user
+
 __all__ = ('index', 'download', 'readf', 'delf')
 
 def regist(app):
@@ -31,6 +33,7 @@ def index():
     if form.validate_on_submit():
         data = form.file.data
         file = File.add_form_data(data)
+        file.user = current_user
         db.session.add(file)
         db.session.commit()
         flash('Upload Succeed!')
@@ -63,7 +66,11 @@ def defn(fn):
     return ts(b16de(tb(fn)))
 
 def download():
-    f = [(url_for('.readf', fn=enfn(f)), f) for f in File.list()]
+    l = File.list(current_user)
+    try:
+        f = [(url_for('.readf', fn=enfn(f)), f, u) for f, u in File.list(current_user)]
+    except:
+        return l
     return render_template('file/files.html', files=f)
 
 download.rule = "/files"

@@ -6,6 +6,6 @@
 
 {% block content %}
 <h1 style="display: inline">Hey {{ user.name }}</h1>
-<a href="{{ url_for('.loginmore') }}" style="color: gray; text-decoration:none; font-size: 10px">Change your info</a>
+<a href="{{ url_for('.loginmore') }}" style="color: gray; text-decoration:none; font-size: 1em">Change your info</a>
 {{ u.showuser(user) }}
 {% endblock %}

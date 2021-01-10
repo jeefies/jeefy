@@ -12,3 +12,4 @@ flask-login
 flask-pagedown
 markdown
 email-validator
+requests

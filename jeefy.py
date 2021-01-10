@@ -1,7 +1,7 @@
 import os
 from app import create_app, db
 from app.models import File, User, Room, Role, Article
-from flask_migrate import Migrate, upgrade
+from flask_migrate import Migrate, upgrade, init
 
 app = create_app(os.getenv("FLASK_CONFIG", 'default'))
 migrate = Migrate(app, db)
@@ -12,7 +12,14 @@ def make():
 
 @app.cli.command()
 def deploy():
-    upgrade()
+    try:
+        Role.checkRole()
+    except:
+        try:
+            upgrade()
+        except:
+            init()
+        Role.checkRole()
 
 @app.cli.command()
 def crt():

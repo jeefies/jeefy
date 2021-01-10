@@ -8,7 +8,7 @@
 {% endmacro %}
 
 {% block content %}
-<audio src="http://m10.music.126.net/20210109200049/aa02117725edc2b2650cfbf8d3effc24/ymusic/fde0/06c2/f6ab/08f81111fda21ed94a1378ceb86dcbe7.mp3" controls="controls" id="snd"></audio>
+<audio src="{{ url_for('song163.raw') + '?Id=31654478'}}" controls="controls" id="snd"></audio>
 <p id="ctx" style="font-size: 1.5em"><small>Start with you!</small></p>
 <img id="img" style="width: 100%; display: inline-block"></img>
 <script>

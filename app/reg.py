@@ -14,3 +14,4 @@ def regist(app, gls, all_):
 def unauthorized_handler():
     flash("Please Log in First!")
     return redirect(url_for('user.loginpage'))
+

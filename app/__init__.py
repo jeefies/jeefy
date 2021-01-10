@@ -3,14 +3,12 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_pagedown import PageDown
 from config import config
 from .reg import unauthorized_handler
 
 moment = Moment()
 bootstrap = Bootstrap()
 db = SQLAlchemy()
-pagedown = PageDown()
 # login manager config
 loginmanager = LoginManager()
 loginmanager.login_view = 'user.login'
@@ -34,7 +32,6 @@ def create_app(cfg):
     bootstrap.init_app(app)
     db.init_app(app)
     loginmanager.init_app(app)
-    pagedown.init_app(app)
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)
@@ -56,5 +53,8 @@ def create_app(cfg):
 
     from .birth import birth as birth_bp
     app.register_blueprint(birth_bp, url_prefix = "/birth")
+
+    from .r163song import song as song_bp
+    app.register_blueprint(song_bp, url_prefix = "/163song")
 
     return app

@@ -1,9 +1,16 @@
 {% macro showuser(user) %}
 <div>
+	<br>
 	<p>Name: {{ user.name }}</p>
 	<p>Email: {{ user.email }}</p>
 	<p>Role: {{ user.role.name }}</p>
+	<p>Gender: {{ user.gender() }}</p>
 	<p>Id: {{ user.id }}</p>
-	<p style="font-size: 1.5em; border-top: thin black solid">{{ user.mkd() }}</p><br>
+	{% if False in user.mkd() %}
+	<p style="font-size: 1.5em; border-top: thin black solid">{{ user.mkd()[0] }}</p><br>
+	{% else %}
+	<h4>Description:</h4>
+	<div id="{{ user.id }}" style="border: thin black solid; padding: 1em">{{ user.mkd()[0]|safe }}</div>
+	{% endif %}
 </div>
 {% endmacro %}

@@ -3,8 +3,8 @@ import gzip
 from markdown import markdown
 
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
-from flask_login import UserMixin
+from flask import current_app, abort
+from flask_login import UserMixin, current_user
 
 from . import db, loginmanager
 
@@ -22,7 +22,7 @@ class File(db.Model):
     @ctx.setter
     def ctx(self, val):
         b = io.BytesIO()
-        with gzip.GZipFile(self.fn, 'w', 6, b) as f:
+        with gzip.GzipFile(self.fn, 'w', 6, b) as f:
             f.write(val)
         self.ct = b.getvalue()
 
@@ -43,8 +43,11 @@ class File(db.Model):
         return f
 
     @classmethod
-    def list(self):
-        return map(lambda x: x.fn, self.query.all())
+    def list(self, user):
+        try:
+            return map(lambda x: (x.fn, x.user), self.query.filter_by(user = user).all())
+        except:
+            return loginmanager.unauthorized()
 
     def __repr__(self):
         return "<File %r to %r.gz>" % self.fn
@@ -60,6 +63,19 @@ class Role(db.Model):
         self.permission |= val
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def checkRole():
+        names = [('Student', 0b111), ('Admin', 0b1111), ('Teacher', 0b111), ('Other', 0b111)]
+        miss = []
+        for name, per in names:
+            if not Role.query.filter_by(name = name).all():
+                r = Role(name = name, permission = per)
+                miss.append(r)
+        else:
+            db.session.add_all(miss)
+            db.session.commit()        
+
 
     def __repr__(self):
         return "<Role %r for %r>" % (self.name, self.permission)
@@ -79,6 +95,7 @@ class User(UserMixin, db.Model):
     birth = db.Column(db.Date)
     password = db.Column(db.String(20))
     #locale = db.Column(db.String(32))
+    # male for boy 0, female for girl 1
     sex = db.Column(db.SmallInteger)
     desc = db.Column(db.Text)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
@@ -123,9 +140,12 @@ class User(UserMixin, db.Model):
 
     def mkd(self):
         if self.desc:
-            return markdown(self.desc)
+            return markdown(self.desc), True
         else:
-            return 'Err... The user is too lazy that left no descriptions'
+            return 'Err... The user is too lazy that left no descriptions', False
+
+    def gender(self):
+        return ("Female" if self.sex else "Male")
 
 @loginmanager.user_loader
 def load_user(user_id):
