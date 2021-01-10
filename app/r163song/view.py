@@ -12,6 +12,10 @@ def index():
 
 @song.route('/get')
 def gets():
+    return get()
+
+@lru_cache()
+def get():
     try:
         sid = int(req.args.get('Id'))
     except:
@@ -34,7 +38,7 @@ def gets():
 def raw():
     return rawm()
 
-@lru_cache(None)
+@lru_cache()
 def rawm():
     try:
         sid = int(req.args.get('Id'))
