@@ -57,4 +57,7 @@ def create_app(cfg):
     from .r163song import song as song_bp
     app.register_blueprint(song_bp, url_prefix = "/163song")
 
+    from .n2021_1_video import video as video_bp
+    app.register_blueprint(video_bp, url_prefix = "/video/school")
+
     return app

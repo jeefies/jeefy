@@ -4,6 +4,7 @@ import gzip
 import time
 from base64 import b16encode as b16en
 from base64 import b16decode as b16de
+from functools import lru_cache
 
 from json import dumps as jdumps
 
@@ -75,6 +76,7 @@ def download():
 
 download.rule = "/files"
 
+@lru_cache()
 def readf(fn):
     fn = defn(fn)
     file = File.query.filter_by(fn = fn).first_or_404()
