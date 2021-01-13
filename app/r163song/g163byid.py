@@ -46,7 +46,7 @@ def getSongById(i, save=True, savedir=None, verbose=False, gn = True):
         text = nr.text[s + 7: e - 8]
         li = scr.split(text)
         song, auth = li[0:2]
-        song = song.replace(' ', '_')
+        song, auth = song.replace(' ', '_'), auth.replace(' ', '_')
         if verbose: print('concating song file name ', end="", flush=True)
         fname = song + '-' + auth + '.mp3'
         if verbose: print(fname)

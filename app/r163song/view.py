@@ -12,16 +12,15 @@ def index():
 
 @song.route('/get')
 def gets():
-    return get()
-
-@lru_cache()
-def get():
     try:
         sid = int(req.args.get('Id'))
     except:
         return "Error Song Id!"
-    print('song getting')
-    sn, fn, sc = getSongById(sid, False, verbose=True)
+    return get(sid)
+
+@lru_cache()
+def get(sid):
+    sn, fn, sc = getSongById(sid, False)
     print("Got it!")
     """
     b = io.BytesIO()
@@ -36,14 +35,14 @@ def get():
 
 @song.route('/raw')
 def raw():
-    return rawm()
-
-@lru_cache()
-def rawm():
     try:
         sid = int(req.args.get('Id'))
     except:
         return "Error Song Id!"
+    return rawm(sid)
+
+@lru_cache()
+def rawm(sid):
     _, _, sc = getSongById(sid, False, gn=False)
     rsp = mkrsp(sc)
     rsp.headers['Content-Type'] = "audio/mp3"
