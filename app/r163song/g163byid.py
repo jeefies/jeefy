@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+from json import loads
 import requests
 
 
@@ -8,7 +9,8 @@ cr = re.compile("<title>.*?</title>")
 scr = re.compile("\s*-\s*")
 
 durl = "https://music.163.com/song/media/outer/url?id={}.mp3"
-surl = "https://music.163.com/song?id={}"
+surl = "https://music.163.com/#/song?id={}"
+jurl = "https://music.163.com/api/song/detail/?id={0}&ids=%5B{0}%5D"
 
 join = os.path.join
 
@@ -25,41 +27,32 @@ def init():
     ses.get('https://music.163.com')
 
 
-def getSongById(i, save=True, savedir=None, verbose=False, gn = True):
+def getSongById(i, save=True, savedir=None, gn = True):
     try:
-        if verbose:
-            print('song content getting')
         sr = ses.get(durl.format(i))
-        if verbose: print('song name getting')
         if gn:
-            nr = ses.get(surl.format(i))
-            if verbose: print('get all ok!')
+            nr = ses.get(jurl.format(i))
     except NameError:
         init()
-        if verbose: print('inited! again!')
-        return getSongById(i, save, savedir, verbose)
+        return getSongById(i, save, savedir, gn)
 
     if gn:
-        r = cr.search(nr.text[:10000])
-        if verbose: print('searching song name')
-        s, e = r.start(), r.end()
-        text = nr.text[s + 7: e - 8]
-        li = scr.split(text)
-        song, auth = li[0:2]
-        song, auth = song.replace(' ', '_'), auth.replace(' ', '_')
-        if verbose: print('concating song file name ', end="", flush=True)
-        fname = song + '-' + auth + '.mp3'
-        if verbose: print(fname)
+        r = loads(nr.text)['songs'][0]
+        songn = r['name'].replace(' ', '_').replace('-', '_')
+        artists = r['artists']
+        for art in artists:
+            songn += '-'
+            songn += art['name'].replace(' ', '_').replace('-', '_')
+        fname = songn + '.mp3'
     if save:
         if savedir is None:
             savedir = os.getcwd()
-        savename = song + '-' + auth + '.mp3' if gn else str(i) + '.mp3'
+        savename = fname if gn else str(i) + '.mp3'
         with open(join(savedir, savename), 'wb') as f:
             f.writelines(sr.iter_content())
         return savename
     else:
-        if verbose: print('returning content')
-        song = song if gn else i
+        song = songn if gn else i
         fn = fname if gn else None
         return song, fn, b''.join(sr.iter_content())
 
@@ -72,7 +65,7 @@ def main():
     print(ids)
     init()
     for i in ids:
-        print(getSongById(i))
+        print(getSongById(i, verbose = 1))
 
 
 if __name__ == '__main__':

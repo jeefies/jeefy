@@ -22,12 +22,6 @@ def gets():
 def get(sid):
     sn, fn, sc = getSongById(sid, False)
     print("Got it!")
-    """
-    b = io.BytesIO()
-    print(sn)
-    with gzip.GzipFile(fn, 'w', fileobj = b) as f:
-        f.write(sc)
-    """
     rsp = mkrsp(sc)
     rsp.headers['Content-Disposition'] = (b"attachment;filename=%s" % (fn.encode('utf-8'))).decode('latin-1')
     rsp.headers['Content-Type'] = "application/octet-stream"
