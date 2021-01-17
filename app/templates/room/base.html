@@ -81,12 +81,8 @@
 			{% endfor %}
 		</div>
 
-		<div class="container">
 		{% block content %}
-			<h2>Hello {% if current_user.is_authenticated %}{{ current_user.name }}
-				{% else %}Stranger{% endif %}</h2>
 		{% endblock content %}
-		</div>
 
 		{% endblock body %}
 

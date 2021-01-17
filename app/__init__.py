@@ -54,10 +54,13 @@ def create_app(cfg):
     from .birth import birth as birth_bp
     app.register_blueprint(birth_bp, url_prefix = "/birth")
 
-    from .r163song import song as song_bp
+    from .g163song import song as song_bp
     app.register_blueprint(song_bp, url_prefix = "/163song")
 
     from .n2021_1_video import video as video_bp
     app.register_blueprint(video_bp, url_prefix = "/video/school")
+
+    from .room import room as room_bp
+    app.register_blueprint(room_bp, url_prefix = "/chatroom")
 
     return app

@@ -1,9 +1,10 @@
 import io
 import gzip
+from json import dumps, loads
 from markdown import markdown
 
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, abort
+from flask import current_app, abort, url_for
 from flask_login import UserMixin, current_user
 
 from . import db, loginmanager
@@ -66,7 +67,8 @@ class Role(db.Model):
 
     @staticmethod
     def checkRole():
-        names = [('Student', 0b111), ('Admin', 0b1111), ('Teacher', 0b111), ('Other', 0b111)]
+        names = [('Student', 0b111), ('Admin', 0b1111), ('Teacher', 0b111), ('Other', 0b111),
+                ('Worker', 0b111), ('Visitor', 0b11)]
         miss = []
         for name, per in names:
             if not Role.query.filter_by(name = name).all():
@@ -174,14 +176,21 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(32), unique = True, nullable = False)
     lines = db.Column(db.LargeBinary)
+    ius = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def readlines(self):
-        return self.lines.split('\x00')[1:]
+    def readlines(self, size = None):
+        if not self.lines:
+            return ()
+        l = lambda x : loads(x.decode())
+        if not size:
+            return (l(i) for i in self.lines.split(b'\x00')[::-1])
+        else:
+            return (l(i) for i in self.lines.split(b'\x00')[size:0:-1])
 
     def addline(self, val):
-        b = json.dumps(val).encode()
-        self.lines += b'\x00' + b
+        b = dumps(val).encode()
+        self.lines = b + b'\x00' +  self.lines if self.lines else b
         db.session.add(self)
         db.session.commit()
 
@@ -189,6 +198,9 @@ class Room(db.Model):
         self.lines = b''
         db.session.add(self)
         db.session.commit()
+
+    def url(self):
+        return url_for('room.room_', roomn = self.name)
 
     def __repr__(self):
         return "<Room %r>" % self.name

@@ -3,7 +3,7 @@ import gzip
 
 from .bp import song
 from ..imps import *
-from .g163byid import init, getSongById
+from .g163byid import init, getSongById, NotFoundError
 from functools import lru_cache
 
 @song.route('/')
@@ -16,7 +16,11 @@ def gets():
         sid = int(req.args.get('Id'))
     except:
         return "Error Song Id!"
-    return get(sid)
+    try:
+        return get(sid)
+    except NotFoundError:
+        flash("Error song Id!")
+        return redirect(url_for('.index'))
 
 @lru_cache()
 def get(sid):
@@ -33,7 +37,11 @@ def raw():
         sid = int(req.args.get('Id'))
     except:
         return "Error Song Id!"
-    return rawm(sid)
+    try:
+        return rawm(sid)
+    except NotFoundError:
+        flash("Error song Id!")
+        return redirect(url_for('.index'))
 
 @lru_cache()
 def rawm(sid):
@@ -41,4 +49,3 @@ def rawm(sid):
     rsp = mkrsp(sc)
     rsp.headers['Content-Type'] = "audio/mp3"
     return rsp
-

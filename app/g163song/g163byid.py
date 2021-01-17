@@ -9,7 +9,6 @@ cr = re.compile("<title>.*?</title>")
 scr = re.compile("\s*-\s*")
 
 durl = "https://music.163.com/song/media/outer/url?id={}.mp3"
-surl = "https://music.163.com/#/song?id={}"
 jurl = "https://music.163.com/api/song/detail/?id={0}&ids=%5B{0}%5D"
 
 join = os.path.join
@@ -37,13 +36,16 @@ def getSongById(i, save=True, savedir=None, gn = True):
         return getSongById(i, save, savedir, gn)
 
     if gn:
-        r = loads(nr.text)['songs'][0]
-        songn = r['name'].replace(' ', '_').replace('-', '_')
-        artists = r['artists']
-        for art in artists:
-            songn += '-'
-            songn += art['name'].replace(' ', '_').replace('-', '_')
-        fname = songn + '.mp3'
+        try:
+            r = loads(nr.text)['songs'][0]
+            songn = r['name'].replace(' ', '_').replace('-', '_')
+            artists = r['artists']
+            for art in artists:
+                songn += '-'
+                songn += art['name'].replace(' ', '_').replace('-', '_')
+            fname = songn + '.mp3'
+        except:
+            raise NotFoundError("Id %d Not found" % i)
     if save:
         if savedir is None:
             savedir = os.getcwd()
@@ -67,6 +69,7 @@ def main():
     for i in ids:
         print(getSongById(i, verbose = 1))
 
+class NotFoundError(Exception): pass
 
 if __name__ == '__main__':
     main()

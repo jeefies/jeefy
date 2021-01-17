@@ -14,6 +14,7 @@ def make():
 def deploy():
     try:
         Role.checkRole()
+        upgrade()
     except:
         try:
             upgrade()

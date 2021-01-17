@@ -11,19 +11,21 @@ from .forms import RegistForm, LoginForm, DetailForm
 
 @user.route('/new', methods = ["GET", "POST"])
 def regist():
+    Role.checkRole()
     form = RegistForm()
     if form.validate_on_submit():
-        admin = Role.query.filter_by(name = 'Admin').first()
         name = form.name.data
         email = form.name.data
         pwd = form.pwd.data
+        role = form.role.data
+        role = Role.query.filter_by(name = role).first()
         if User.query.filter_by(name = name).all():
             flash('The name has been registed!')
             return redirect(url_for('.index'))
         elif User.query.filter_by(email = email).all():
             flash("The email is already in used")
             return redirect(url_for('.index'))
-        user = User(name = name, email = email, role = admin, password = pwd)
+        user = User(name = name, email = email, role = role, password = pwd)
         db.session.add(user)
         db.session.commit()
         flash("regist success")
