@@ -26,6 +26,11 @@ def deploy():
 def crt():
     db.create_all()
 
+@app.cli.command()
+def reset():
+    db.drop_all()
+    db.create_all()
+
 if __name__ == '__main__':
         try:
             app.run('0.0.0.0', 80)
