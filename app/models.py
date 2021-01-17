@@ -184,9 +184,9 @@ class Room(db.Model):
             return ()
         l = lambda x : loads(x.decode())
         if not size:
-            return (l(i) for i in self.lines.split(b'\x00')[::-1])
+            return (l(i) for i in self.lines.split(b'\x00'))
         else:
-            return (l(i) for i in self.lines.split(b'\x00')[size:0:-1])
+            return (l(i) for i in self.lines.split(b'\x00')[:size])
 
     def addline(self, val):
         b = dumps(val).encode()

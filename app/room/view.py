@@ -41,6 +41,9 @@ def room_(roomn):
 @login_required
 def chatting(u):
     r = get_room(u)
+    if not r:
+        flash('no such room')
+        return redirect(url_for('.index'))
     if req.method == "POST":
         ctx = req.values.get('line')
         if ctx:
@@ -53,8 +56,11 @@ def chatting(u):
     return render_template('room/chat.html', room = r, u = url_for('.jget', u = u), _u = u)
 
 def get_room(u):
-    n = b16d(u)
-    return Room.query.filter_by(name = n).first_or_404()
+    try:
+        n = b16d(u)
+    except:
+        return None
+    return Room.query.filter_by(name = n).first()
 
 @room.route('/')
 def index():
@@ -68,12 +74,18 @@ def jget(u):
     if n:
         n = int(n)
     r = get_room(u)
+    if not r:
+        flash('no such room')
+        return redirect(url_for('.index'))
     return dumps(tuple(r.readlines(n)))
 
 @room.route('/romd/<u>')
 @login_required
 def droom(u):
     r = get_room(u)
+    if not r:
+        flash('no such room')
+        return redirect(url_for('.index'))
     if not r.user == current_user:
         flash('You have no access')
         return redirect(url_for('.index'))
@@ -86,6 +98,9 @@ def droom(u):
 @login_required
 def reset(u):
     r = get_room(u)
+    if not r:
+        flash('no such room')
+        return redirect(url_for('.index'))
     if not r.user == current_user:
         flash('You have no access')
         return redirect(url_for('.index'))
