@@ -20,7 +20,6 @@
 		{% endblock styles%}
 		
 		{% block headscripts %}
-		<script src="{{ url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
 		<script src="{{ url_for('static', filename='js/mine.js')}}"></script>
 		{% endblock headscripts %}
 
@@ -91,6 +90,7 @@
 		{% endblock body %}
 
 		{% block scripts %}
+		<script src="{{ url_for('static', filename='bootstrap/jquery.min.js')}}"></script>
 		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js')}}"></script>
 		{% endblock scripts %}
 

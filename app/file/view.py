@@ -10,14 +10,17 @@ from json import dumps as jdumps
 
 from .forms import FileForm
 from .. import db
-from ..gls import FILEPATH
 from ..imps import *
 from ..reg import regist as reg
 from ..models import File, User
 
 from flask_login import current_user
 
-__all__ = ('index', 'download', 'readf', 'delf')
+__all__ = ('index', 'download', 'readf', 'delf', 'showf', 'changecon', 'chname')
+
+def printr(x):
+    print(x)
+    return x
 
 def regist(app):
     reg(app, globals(), __all__)
@@ -69,12 +72,27 @@ def defn(fn):
 def download():
     l = File.list(current_user)
     try:
-        f = [(url_for('.readf', fn=enfn(f)), f, u) for f, u in File.list(current_user)]
+        f = [(url_for('.showf', fn=enfn(f)), f, u) for f, u in File.list(current_user)]
     except:
         return l
     return render_template('file/files.html', files=f)
 
 download.rule = "/files"
+
+def urls(fn):
+    return dict(dl = url_for('.readf', fn = fn),
+            upl = url_for('.changecon', fn = fn),
+            ren = url_for('.chname', fn = fn),
+            show = url_for('.showf', fn = fn),
+            dele = url_for('.delf', fn = fn))
+
+def showf(fn):
+    f = defn(fn)
+    file = File.query.filter_by(fn = f).first_or_404()
+
+    return render_template('file/show.html', f = file, urls = urls(fn))
+
+showf.rule = "/show/<fn>"
 
 @lru_cache()
 def readf(fn):
@@ -83,10 +101,40 @@ def readf(fn):
     rfn, fi = file.info()
     fio = io.BytesIO(fi)
     rsp = mkrsp(send_file(fio, attachment_filename = rfn, as_attachment=True))
-    rsp.headers['Content-Type'] = "application/gzip"
+    rsp.headers['Content-Type'] = "application/octet-stream"
+    rsp.headers['Content-Encoding'] = "gzip"
+    rsp.headers['Content-Disposition'] = (b"attachment;filename=%s" % rfn.encode()).decode('latin-1')
     return rsp
 
 readf.rule = "/dl/<fn>"
+
+
+def changecon(fn):
+    ctx = req.values.get('ctx')
+    n = defn(fn)
+    file = File.query.filter_by(fn = n).first_or_404()
+    file.ctx = ctx.encode()
+    db.session.add(file)
+    db.session.commit()
+    return jsonify({'code': 200, 'success': True})
+
+changecon.rule = '/cc/<fn>'
+changecon.method = {'POST', 'GET'}
+
+def chname(fn):
+    newn = req.values.get('name')
+    n = defn(fn)
+    if newn == n:
+        return jsonify({'code': 200, 'success': True, 'reload': False})
+    file = File.query.filter_by(fn = n).first_or_404()
+    file.fn = newn
+    file.ctx = file.ctx
+    db.session.add(file)
+    db.session.commit()
+    return jsonify({'code': 200, 'success': True, 'reload': True, 'url': url_for('.showf', fn = enfn(newn))})
+
+chname.rule = '/cn/<fn>'
+chname.method = {'POST', 'GET'}
 
 def delf(fn):
     fn = defn(fn)

@@ -46,3 +46,7 @@ function addLine(line, root) {
 function goBackMain() {
 	window.location.href = "{{ url_for('room.index' )}}"
 }
+
+function Go(url) {
+	location.href = url
+}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block tit %}File - {{ f.fn }}{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style type="text/css">
+#Download {
+	margin-block-start: 0em;
+	margin-block-end: 0em;
+}
+h1 {
+	margin-bottom: 10px;
+	margin-bottom: 1rem;
+}
+div.Barr p {
+	display: inline;
+	margin: 0em 1em 0em 1em;
+}
+</style>
+{% endblock %}
+
+{% block headscripts%}
+{{ super() }}
+<script>
+const dlurl = "{{ urls['dl'] }}";
+const uplurl = "{{ urls['upl'] }}";
+const renurl = "{{ urls['ren'] }}";
+const filename = "{{ f.fn }}"
+
+function Main() {
+	const editer = document.getElementById('Content');
+	editer.style.width = "100%";
+	//editer.style.maxHeight = "100%";
+	editer.style.border = "thin black solid";
+	editer.style.padding = "1em";
+	text = editer.innerText;
+	
+	const btn1 = document.getElementById('Butt1');
+	const btn2 = document.getElementById('Butt2');
+	function uploadEdition() {
+		let text = editer.innerText;
+		$.post(uplurl, {'ctx': text}, function() {
+			alert('Upload success!')
+		})}
+	function startEdit() {
+		editer.contentEditable = true;
+		btn2.style.display = "inline";
+		btn1.innerText = "End Edit";
+		btn1.removeEventListener('click', startEdit);
+		btn1.addEventListener('click', endEdit);
+	}
+		function endEdit() {
+		editer.contentEditable = false;
+		if (editer.innerText == text) {
+			btn2.style.display = 'none';
+		}
+		btn1.innerText = "Edit";
+		btn1.removeEventListener('click', endEdit);
+		btn1.addEventListener('click', startEdit);
+	}
+	btn1.addEventListener('click', startEdit);
+	btn2.addEventListener('click', uploadEdition);
+}
+
+function Download() {
+	a = document.createElement('a');
+	a.style.display = "none";
+	document.body.appendChild(a);
+	a.href = dlurl;
+	a.click();
+	document.body.removeChild(a);
+}
+
+function Rename() {
+	let result = prompt("Change Your File Name to?", filename);
+	if (result !== null) {
+		if (result == filename) {
+			alert('Nothing Changed');
+			return
+		}else if (result.length > 31) {
+			alert("Too Long File Name");
+			R.click();
+		} else {
+			$.post(renurl, {'name': result}, (res) => {
+				if (res['reload']) {
+					location.href = res['url'];
+				} else {
+					alert('Nothing Changed..');
+				}
+			});
+		}
+	}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>{{ f.fn }}</h1>
+<div class="Barr">
+	<p id="Rename" onclick="Rename()"><big>Rename</big></p>
+	<p id="Download" onclick="Download()">Download</p>
+	<p onclick="location.reload(true)">Reload</p>
+</div>
+{% set ctx, text = f.text() %}
+{% if text %}
+<div id="Content">
+	{{ ctx.replace('\n', '<br>')|safe }}
+</div>
+<script>document.body.onload = Main</script>
+{% else %}
+<div onclick="Download()">
+	<h2>No support for Edit Text</h2>
+</div>
+{% endif %}
+<button type="button" id="Butt1">Edit</button>
+<button type="button" id="Butt2" style="display: none">Upload</button>
+
+{% endblock %}

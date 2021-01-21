@@ -56,7 +56,8 @@ div.InputLine input[type="text"] {
 div.InputLine input[type="submit"] {
 	width: 15%;
 	float: right;
-	font-size: 1.1em
+	font-size: 1.1em;
+	margin-right: 3%
 }
 div.InputLine input {
 	white-space: nowrap;
@@ -107,12 +108,10 @@ div.Contents p.ctx {
 
 {% block headscripts %}
 {{ super() }}
-	<script>{% include "room/content.js" %}</script>
-	<script>
-		function Go(url) {
-			window.location.href = url;
-		}
-	</script>
+<script src="room/content.js"></script>
+{#
+	<script>{% includes "js/content.js" %}</script>
+#}
 {% endblock %}
 
 {% block navbar %}

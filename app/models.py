@@ -20,6 +20,12 @@ class File(db.Model):
     def ctx(self):
         return gzip.decompress(self.ct)
 
+    def text(self):
+        try:
+            return gzip.decompress(self.ct).decode(), True
+        except:
+            return gzip.decompress(self.ct), False
+
     @ctx.setter
     def ctx(self, val):
         b = io.BytesIO()
@@ -28,7 +34,7 @@ class File(db.Model):
         self.ct = b.getvalue()
 
     def info(self):
-        return (self.fn + '.gz', self.ct)
+        return (self.fn, self.ct)
     
     @classmethod
     def add_form_data(cls, data):
