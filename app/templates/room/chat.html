@@ -4,111 +4,12 @@
 {% block tit %}Room - {{ room.name }}{% endblock %}
 
 {% block styles %}
-<style type="text/css">
-div.Header {
-	border-bottom: thin gray solid;
-	height: 10%
-}
-div.Header label{
-	width: 10%;
-	font-weight: bold;
-	text-align: left;
-	line-height: 1em;
-	display: inline;
-	white-space: nowrap;
-	border-right: thin black solid;
-	color: gray;
-}
-div.Header label:hover {
-	background-color: red;
-}
-div.Header h3 {
-	width: 90%;
-	display: inline-block;
-	margin-block-start: 0em;
-	margin-block-end: 0em;
-	text-align: center;
-}
-div.Manage {
-	position: fixed;
-	width : 20%;
-	right: 0em;
-	top: 0.3em;
-}
-div.Manage button {
-	font-size: 0.7em
-}
-div.InputLine {
-	position: fixed;
-	width: 98%;
-	display: inline;
-	top: 90%;
-	left: 1em;
-}
-div.InputLine input[type="text"] {
-	width: 80%;
-	float: left;
-	border-width: 3px;
-	height: 1.17em;
-	font-size: 1.1em;
-	border-radius: 10px;
-}
-div.InputLine input[type="submit"] {
-	width: 15%;
-	float: right;
-	font-size: 1.1em;
-	margin-right: 3%
-}
-div.InputLine input {
-	white-space: nowrap;
-}
-div.Contents {
-	position: absolute;
-	width: 98%;
-	height: 80%;
-	border-bottom: thin black solid;
-	display: inline-block;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-div.Contents::-webkit-scrollbar-x{
-	display: none
-}
-
-div.Contents div.main {
-	border-bottom: 0.5px gray dashed;
-}
-div.Contents div.header {
-	width: 95%
-}
-div.Contents div.header p {
-	font-weight: bold;
-	margin-block-start: 0em;
-	margin-block-end: 0em;
-	width: 50%;
-	float: left;
-}
-div.Contents div.header time {
-	float: right;
-	color: gray;
-	font-size: 0.8em;
-	transform: translateY(0.2em);
-}
-div.Contents p.ctx {
-	width: 100%;
-	font-size: 1em;
-	text-align: left;
-	margin-block-start: 0.3em;
-	margin-block-end: 0.3em;
-	left: 1em;
-	transform: translateX(1em);
-}
-</style>
+<link type="text/css" href="{{ url_for('static', filename='css/room-chat.css')}}" rel="stylesheet">
 {% endblock styles %}
 
 {% block headscripts %}
 {{ super() }}
-<script src="room/content.js"></script>
+<script src="/static/js/content.js"></script>
 {#
 	<script>{% includes "js/content.js" %}</script>
 #}
@@ -125,8 +26,10 @@ div.Contents p.ctx {
 <div class="Contents" id="Contents">
 	<script>
 		ctt = document.getElementById('Contents');
-		showContent(ctt);
-		ctt.scrollTop = ctt.scrollHeight;
+		document.body.onload = () => showContent(ctt);
+		//ctt.scrollTop = ctt.scrollHeight;
+		dataurl = "{{ u }}";
+		mainurl = "{{ url_for('room.index' )}}";
 	</script>
 </div>
 <div class="InputLine">

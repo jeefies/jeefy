@@ -2,7 +2,7 @@ var odata;
 
 function showContent(div) {
 	let root = div;
-	$.get("{{ u }}", {}, function(data){
+	$.get(dataurl, {}, function(data){
 		let datas = JSON.parse(data);
 		if (data != odata) {
 			div.innerHTML = '';
@@ -44,7 +44,7 @@ function addLine(line, root) {
 }
 
 function goBackMain() {
-	window.location.href = "{{ url_for('room.index' )}}"
+	window.location.href = mainurl
 }
 
 function Go(url) {
