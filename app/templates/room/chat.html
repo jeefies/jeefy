@@ -26,17 +26,16 @@
 <div class="Contents" id="Contents">
 	<script>
 		ctt = document.getElementById('Contents');
+		evdurl = "{{ url_for('.event_data', u = _u)}}"
 		document.body.onload = () => showContent(ctt);
-		//ctt.scrollTop = ctt.scrollHeight;
 		dataurl = "{{ u }}";
 		mainurl = "{{ url_for('room.index' )}}";
+		suburl = "{{ url_for('.recv_data', u = _u) }}";
 	</script>
 </div>
 <div class="InputLine">
-	<form action="" method="POST">
-		<input type="text" name="line" name="line" required="required" autofocus="autofocus">
-		<input type="submit" value="Submit">
-	</form>
+	<input type="text" name="line" id="Line" required="required" autofocus="autofocus">
+	<input type="submit" value="Submit" onclick="Submit()">
 </div>
 {% if current_user == room.user %}
 <div class="Manage">

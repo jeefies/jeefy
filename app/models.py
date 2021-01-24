@@ -199,6 +199,7 @@ class Room(db.Model):
         self.lines = b + b'\x00' +  self.lines if self.lines else b
         db.session.add(self)
         db.session.commit()
+        return b.decode()
 
     def reset(self):
         self.lines = b''

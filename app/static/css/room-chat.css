@@ -26,11 +26,12 @@ div.Manage {
 	position: fixed;
 	right: 2%;
 	width: 20em;
+	bottom: 93%;
 }
 div.Manage button {
 	font-size: 0.7em;
 	float: right;
-	margin: 0em 0.45% 0em 0.45%
+	margin: 0em 0.45% 0em 0.45%;
 }
 div.InputLine {
 	position: fixed;
@@ -111,10 +112,5 @@ div.Contents p.ctx {
 	}
 	div.Manage {
 		bottom: 1em;
-	}
-}
-@media (not max-width: 568px) {
-	div.Manage {
-		top: 0.3em;
 	}
 }

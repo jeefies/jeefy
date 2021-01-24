@@ -1,19 +1,16 @@
 var odata;
+var ed;
 
 function showContent(div) {
 	let root = div;
-	$.get(dataurl, {}, function(data){
-		let datas = JSON.parse(data);
-		if (data != odata) {
-			div.innerHTML = '';
-			for (const line of datas) {
-				addLine(line, root);
-			};
-			odata = data;
-		}
+	const es = new EventSource(evdurl);
+	es.onmessage = function(e) {
+		console.log(e.data);
+		try {
+			let line = JSON.parse(e.data);
+			addLine(line, root);
+		} catch(e) {}
 	}
-	)
-	setTimeout(() => showContent(div), 3000)
 }
 
 function addLine(line, root) {
@@ -25,8 +22,10 @@ function addLine(line, root) {
 	let name = document.createElement("p");
 	name.innerText = line['user'];
 	let time = document.createElement("time");
-	stime = new Date(line['time']);
-	s = stime.toLocaleDateString().split('/').join('-') + ' ' + stime.toTimeString().substr(0, 12);
+	stime = new Date(line['time'] * 1000);
+	console.log(line['time']* 1000);
+	console.log(stime);
+	let s = stime.toLocaleDateString().split('/').join('-') + ' ' + stime.toTimeString().substr(0, 12);
 	time.innerHTML = s;
 	header.appendChild(name);
 	header.appendChild(time);
@@ -49,4 +48,10 @@ function goBackMain() {
 
 function Go(url) {
 	location.href = url
+}
+
+function Submit() {
+	const Line = document.getElementById('Line');
+	$.post(suburl, {'line': Line.value}, function(res) {});
+	Line.value = '';
 }
