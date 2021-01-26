@@ -1,11 +1,24 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% import "user/_user.html" as u%}
 
 {% block tit %}User - {{ user.name }}{% endblock %}
 
 {% block content %}
 <h1 style="display: inline">Hey {{ user.name }}</h1>
-<a href="{{ url_for('.loginmore') }}" style="color: gray; text-decoration:none; font-size: 1em">Change your info</a>
-{{ u.showuser(user) }}
+{% if current_user == user %}
+<a href="{{ url_for('.more') }}" style="color: gray; text-decoration:none; font-size: 1em">Change your info</a>
+{% endif %}
+<div>
+	<br>
+	<p>Name: {{ user.name }}</p>
+	<p>Email: {{ user.email }}</p>
+	<p>Role: {{ user.role.name }}</p>
+	<p>Gender: {{ user.gender() }}</p>
+	<p>Id: {{ user.id }}</p>
+	{% if False in user.mkd() %}
+	<p style="font-size: 1.5em; border-top: thin black solid">{{ user.mkd()[0] }}</p><br>
+	{% else %}
+	<h4>Description:</h4>
+	<div id="{{ user.id }}" style="border: thin black solid; padding: 1em">{{ user.mkd()[0]|safe }}</div>
+	{% endif %}
+</div>
 {% endblock %}

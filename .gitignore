@@ -6,5 +6,6 @@ env
 *.swo
 *.sqlite
 migrations
+.idea
 
 /app/templates/*/*.js

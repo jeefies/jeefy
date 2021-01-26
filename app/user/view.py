@@ -1,12 +1,17 @@
-#from json import dumps
-
+"""
+Views:
+    /new(regist): regist a new user
+    /login(loginpage): a html page to login. redirect the data to /login/<name>/<password>
+    /login/<name>/<password>(login): a api to login(name can be email)
+    /logout(logout): logout the account has logged in
+"""
 from flask_login import login_user, login_required, logout_user, current_user
 
 from ..models import User, Role
 from ..imps import *
 from .. import db
 from .bp import user
-from .forms import RegistForm, LoginForm, DetailForm
+from .forms import RegistForm, LoginForm
 
 
 @user.route('/new', methods = ["GET", "POST"])
@@ -38,6 +43,8 @@ def login(name, password):
     rem = True if rem else False
     user = User.query.filter_by(name = name, password = password).first()
     if not user:
+        user = User.query.filter_by(email = name, password = password).first()
+    if not user:
         flash("User Info Doesn't match!")
         return redirect(url_for('.loginpage'))
     login_user(user, rem)
@@ -54,56 +61,9 @@ def loginpage():
         return redirect(url)
     return render_template("user/login.html", form = form)
 
-@user.route('/user-detail', methods = ["GET", "POST"])
-@login_required
-def loginmore():
-    user = current_user
-    form = DetailForm()
-    """if not name:
-        flash("Witch user?")
-        return redirect('/')"""
-    if form.validate_on_submit():
-        user.birth = form.birth.data
-        s = form.sex.data
-        user.sex = 0 if s == "Male" else 1
-        user.desc = form.desc.data
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for(".self"))
-    form.birth.data = user.birth
-    form.sex.data = user.sex
-    form.desc.data = user.desc
-    return render_template("user/detail.html", form = form)
-
 @user.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash("You have been logged out")
     return redirect(url_for('main.index'))
-
-@user.route('/u/<name>')
-def see(name):
-    user = User.query.filter_by(name = name).first_or_404()
-    return render_template('user/user.html', user = user)
-
-@user.route('/')
-def index():
-    return render_template('user/index.html')
-
-@user.route('/--list')
-def listus():
-    if req.args.get('self') == 'true':
-        try:
-            user = User.query.filter_by(name = current_user.name).first()
-            if user:
-                return jsonify(user.json())
-        except:
-            pass
-    return render_template('user/users.html', users = User.query.all())
-
-@user.route('/self')
-@login_required
-def self():
-    return redirect(url_for('.see', name = current_user.name))
-

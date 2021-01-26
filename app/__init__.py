@@ -15,6 +15,7 @@ loginmanager.login_view = 'user.login'
 loginmanager.login_message = "Please log in first!"
 loginmanager.unauthorized_callback = unauthorized_handler
 
+
 def create_app(cfg):
     print(cfg)
     app = Flask(__name__)
@@ -49,18 +50,18 @@ def create_app(cfg):
     app.register_blueprint(user_bp, url_prefix="/user")
 
     from .js import js as js_bp
-    app.register_blueprint(js_bp, url_prefix = "/js")
+    app.register_blueprint(js_bp, url_prefix="/js")
 
     from .birth import birth as birth_bp
-    app.register_blueprint(birth_bp, url_prefix = "/birth")
+    app.register_blueprint(birth_bp, url_prefix="/birth")
 
     from .g163song import song as song_bp
-    app.register_blueprint(song_bp, url_prefix = "/163song")
+    app.register_blueprint(song_bp, url_prefix="/163song")
 
     from .n2021_1_video import video as video_bp
-    app.register_blueprint(video_bp, url_prefix = "/video/school")
+    app.register_blueprint(video_bp, url_prefix="/video/school")
 
     from .room import room as room_bp
-    app.register_blueprint(room_bp, url_prefix = "/chatroom")
+    app.register_blueprint(room_bp, url_prefix="/chatroom")
 
     return app

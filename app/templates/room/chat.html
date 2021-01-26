@@ -10,9 +10,6 @@
 {% block headscripts %}
 {{ super() }}
 <script src="/static/js/content.js"></script>
-{#
-	<script>{% includes "js/content.js" %}</script>
-#}
 {% endblock %}
 
 {% block navbar %}
@@ -34,7 +31,7 @@
 	</script>
 </div>
 <div class="InputLine">
-	<input type="text" name="line" id="Line" required="required" autofocus="autofocus">
+	<input type="text" name="line" id="Line" required="required" autofocus="autofocus" onkeypress="KeyPress(event)">
 	<input type="submit" value="Submit" onclick="Submit()">
 </div>
 {% if current_user == room.user %}

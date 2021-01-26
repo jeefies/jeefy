@@ -6,9 +6,11 @@ from collections import deque
 class Deque(deque):
     def call(self, method, args=(), kwargs={}):
         return [getattr(i, method)(*args, **kwargs) for i in self.copy()]
-        
+
+
 class Work(object):
     ins = {}
+
     def __new__(self, name):
         if name in self.ins:
             return self.ins[name]
@@ -26,7 +28,7 @@ class Work(object):
 
     def add(self, ctx):
         self.contents.append(ctx)
-    
+
     def append(self, worker):
         ws = self.workers
         ws.append(worker)
@@ -40,13 +42,13 @@ class Work(object):
         self.workers.call('destroy')
         self.ins.pop(self.name)
         del self
-    
+
     def __len__(self):
         return len(self.contents)
-        
+
     def __eq__(self, other):
         print('work eq call')
-        return self.name == other.name 
+        return self.name == other.name
 
 
 class Worker(object):
@@ -58,7 +60,7 @@ class Worker(object):
         self.work = work
         self._count = 0
         self.connected = True
-        
+
     def iter(self):
         while True:
             r = next(self)
@@ -76,7 +78,7 @@ class Worker(object):
 
     def reset(self):
         self._count = 0
-    
+
     def quit(self):
         print("Quit")
         if self in self.work.workers:
@@ -106,6 +108,6 @@ class Worker(object):
                 return False
         self._count += 1
         return w[c]
-    
+
     def __eq__(self, other):
         return self._wp == other._wp and self.work == other.work

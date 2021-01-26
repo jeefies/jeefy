@@ -38,8 +38,9 @@ function addLine(line, root) {
 	div.appendChild(header);
 	div.appendChild(br);
 	div.appendChild(ctx);
+	console.log(div.outerHTML);
 
-	root.appendChild(div);
+	root.innerHTML = div.outerHTML + root.innerHTML;
 }
 
 function goBackMain() {
@@ -54,4 +55,12 @@ function Submit() {
 	const Line = document.getElementById('Line');
 	$.post(suburl, {'line': Line.value}, function(res) {});
 	Line.value = '';
+	Line.focus()
+}
+
+function KeyPress(event) {
+	console.log(event.key);
+	if (event.key == "Enter") {
+		Submit()
+	}
 }

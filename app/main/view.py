@@ -1,20 +1,21 @@
-import os
-import time
-import zlib
-import base64
 from functools import lru_cache
 
 from ..imps import *
 from ..reg import regist as reg
+
+from flask_login import current_user
+
 
 __all__ = ('index', "_pic", 'urls')
 
 def regist(app):
     reg(app, globals(), __all__)
 
-@lru_cache()
 def index():
-    return render_template('base.html')
+    @lru_cache()
+    def r(cur):
+        return render_template('base.html')
+    return r(current_user)
 
 index.rule = '/'
 

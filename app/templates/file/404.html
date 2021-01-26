@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block tit %}File Not Found{% endblock %}
+
+{% block content %}
+<h1>File Not Found</h1>
+<p>Your Requeted File <strong>is not</strong> Exists</p>
+<p>Please Return to the Index Page <small onclick="backIndex()">here</small> Or Check you URL again</p>
+<script>
+    const indexURL="{{ url_for('.index') }}";
+    function backIndex() {
+        windows.location.href = indexURL;
+    }
+</script>
+{% endblock %}

@@ -6,12 +6,12 @@ def regist(app, gls, all_):
         method = getattr(func, 'method', ['GET'])
         name = func.__name__
         rule = getattr(func, 'rule')
-        app.add_url_rule(rule, name, func, methods = method)
+        app.add_url_rule(rule, name, func, methods=method)
 
     for k in all_:
         _reg(gls[k])
 
+
 def unauthorized_handler():
     flash("Please Log in First!")
     return redirect(url_for('user.loginpage'))
-
