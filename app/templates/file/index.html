@@ -4,6 +4,6 @@
 {% block tit %}File{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('.download') }}" style="text-decoration: none; color: gray">Download Url</a>
+<a href="{{ url_for('.files') }}" style="text-decoration: none; color: gray">Download Url</a>
 {{ wtf.quick_form(form) }}
 {% endblock %}

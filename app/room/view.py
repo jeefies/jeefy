@@ -1,7 +1,15 @@
-import zlib
+"""
+views:
+    / (index): List all the rooms
+    /room/<room> (room_): redirect to chatting
+    /new (new): regist a new room and redirect to chatting
+    /rom/<u> (chatting): main chatting page
+    /rom/<u>/data (recv_data): where the line submit to
+    /rom/<u>/evd (event_data): event-stream data with Work class
+    /romd/<u> (droom): delete the room and redirect to index
+    /romr/<u> (reset): reset the room contents
+"""
 import time
-import codecs
-import base64
 from json import loads, dumps
 from functools import lru_cache
 
@@ -9,41 +17,36 @@ from ..imps import *
 from ..models import Room
 from ..worker import Work, Worker
 from .. import db
+from .rdict import Rdict
 
 from .bp import room
 
 WORKS = {}
+rdict = Rdict()
 
 @room.route('/new')
 @login_required
 def new():
     n = req.args.get('name')
     if n:
-        if Room.query.filter_by(name = n).first():
-            flash("The name is already in used!Please change another one")
+        if n in rdict.nd:
+            flash("The name is already in used! Please change another one")
             return redirect(url_for('.new'))
         r = Room(name = n, user = current_user)
-        db.session.add(r)
-        db.session.commit()
+        rdict.add(r)
         return redirect(url_for('.room_', roomn = n))
     return render_template('room/new.html')
-
-def b16e(b):
-    return base64.b16encode(b.encode()).decode()
-
-def b16d(b):
-    return base64.b16decode(b.encode()).decode()
 
 @room.route('/room/<roomn>')
 @login_required
 def room_(roomn):
-    ju = b16e(roomn)
+    ju = rdict.enc(roomn)
     return redirect(url_for('.chatting', u = ju))
 
 @room.route('/rom/<u>', methods=['post', 'get'])
 @login_required
 def chatting(u):
-    r = get_room(u)
+    r = rdict[u]
     if not r:
         flash('no such room')
         return redirect(url_for('.index'))
@@ -51,7 +54,7 @@ def chatting(u):
 
 @room.route('/rom/<u>/data', methods=['POST'])
 def recv_data(u):
-    r = get_room(u)
+    r =rdict[u]
     di = dict(ctx = req.values.get('line'),
     user = current_user.name,
     time = time.time())
@@ -65,13 +68,6 @@ def event_data(u):
     rsp = Rsp(WebWorker(getwork(u)).iter(), mimetype="text/event-stream")
     return rsp
 
-def get_room(u):
-    try:
-        n = b16d(u)
-    except:
-        return None
-    return Room.query.filter_by(name = n).first()
-
 @room.route('/')
 def index():
     rooms = Room.query.all()
@@ -83,7 +79,7 @@ def jget(u):
     n = req.args.get('lines')
     if n:
         n = int(n)
-    r = get_room(u)
+    r = rdict[u]
     if not r:
         flash('no such room')
         return redirect(url_for('.index'))
@@ -92,23 +88,26 @@ def jget(u):
 @room.route('/romd/<u>')
 @login_required
 def droom(u):
-    r = get_room(u)
+    r = rdict[u]
+    w = getwork(u)
+    w.call('send', 'destroy')
+    w.destroy()
     if not r:
         flash('no such room')
         return redirect(url_for('.index'))
     if not r.user == current_user:
         flash('You have no access')
         return redirect(url_for('.index'))
-    db.session.delete(r)
-    db.session.commit()
+    rdict.popu(u)
     flash('Delete success!')
     return redirect(url_for('.index'))
 
 @room.route('/romr/<u>')
 @login_required
 def reset(u):
-    r = get_room(u)
+    r = rdict[u]
     w = getwork(u)
+    w.call('send', 'reset')
     if not r:
         flash('no such room')
         return redirect(url_for('.index'))
@@ -127,9 +126,8 @@ class WebWorker(Worker):
 
 def getwork(u):
     if not u in WORKS:
-        r = get_room(u)
-        WORKS[u] = Work(u)
-        w = WORKS[u]
-        for l in r.lines.split(b'\x00')[::-1]:
+        r = rdict[u]
+        w = WORKS[u] = Work(u)
+        for l in r.readlines(loads = False):
             w.add(l.decode())
     return WORKS[u]

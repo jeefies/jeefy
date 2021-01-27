@@ -197,11 +197,12 @@ class Room(db.Model):
     ius = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def readlines(self, size=None):
+    def readlines(self, size=None, loads = True):
         if not self.lines:
             return ()
 
-        def l(x): return loads(x.decode())
+        l = lambda x:loads(x.decode()) if loads else lambda x: x
+
         if not size:
             return (l(i) for i in self.lines.split(b'\x00'))
         else:

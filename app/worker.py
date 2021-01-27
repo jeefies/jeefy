@@ -18,6 +18,9 @@ class Work(object):
         self.ins[name] = i
         return i
 
+    def call(self, func, *args, **kwargs):
+        return self.workers.call(func, args, kwargs)
+
     def __init__(self, name):
         self.name = name
         self.workers = Deque()
@@ -60,6 +63,7 @@ class Worker(object):
         self.work = work
         self._count = 0
         self.connected = True
+        self.data = None
 
     def iter(self):
         while True:
@@ -89,9 +93,16 @@ class Worker(object):
         self._count = 0
         return self
 
+    def send(self, data):
+        self.data = data
+
     def __next__(self):
         if not self.connected:
             return False
+        if self.data:
+            d = self.data
+            self.data = None
+            return d
         c = self._count
         if len(self.work) > c:
             self._count += 1
@@ -101,6 +112,10 @@ class Worker(object):
         while len(w) <= c:
             if not self.connected:
                 return False
+            if self.data:
+                d = self.data
+                self.data = None
+                return d
             time.sleep(0.2 + t)
             t += 0.0001
             if t >= 1:

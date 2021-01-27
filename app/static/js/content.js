@@ -1,11 +1,16 @@
-var odata;
-var ed;
-
 function showContent(div) {
 	let root = div;
 	const es = new EventSource(evdurl);
 	es.onmessage = function(e) {
-		console.log(e.data);
+		let data = e.data;
+		if (data == 'reset') {
+			root.innerHTML = '';
+			return
+		}
+		if (data == 'destroy') {
+			alert("Room destroyed!");
+			goBackMain();
+		}
 		try {
 			let line = JSON.parse(e.data);
 			addLine(line, root);

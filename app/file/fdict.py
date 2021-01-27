@@ -1,6 +1,14 @@
 from ..models import db, File
 
 class Fdict(dict):
+    ins = None
+    def __new__(self, *args, **kwargs):
+        if self.ins:
+            return self.ins
+        else:
+            self.ins = super().__new__(self)
+            return self.ins
+	
     def __getitem__(self, index):
         return super().get(index, self.fromName(index))
 
