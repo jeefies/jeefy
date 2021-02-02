@@ -10,6 +10,7 @@ scr = re.compile("\s*-\s*")
 
 durl = "https://music.163.com/song/media/outer/url?id={}.mp3"
 jurl = "https://music.163.com/api/song/detail/?id={0}&ids=%5B{0}%5D"
+#purl = "https://music.163.com/api/playlist/detail/?id={}"
 
 join = os.path.join
 
@@ -29,6 +30,8 @@ def init():
 def getSongById(i, save=True, savedir=None, gn = True):
     try:
         sr = ses.get(durl.format(i))
+        if sr.content.startswith(b'<'):
+            raise NotFoundError('song not found')
         if gn:
             nr = ses.get(jurl.format(i))
     except NameError:
@@ -46,6 +49,7 @@ def getSongById(i, save=True, savedir=None, gn = True):
             fname = songn + '.mp3'
         except:
             raise NotFoundError("Id %d Not found" % i)
+
     if save:
         if savedir is None:
             savedir = os.getcwd()
@@ -67,7 +71,7 @@ def main():
     print(ids)
     init()
     for i in ids:
-        print(getSongById(i, verbose = 1))
+        print(getSongById(i))
 
 class NotFoundError(Exception): pass
 

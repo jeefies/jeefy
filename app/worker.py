@@ -99,28 +99,35 @@ class Worker(object):
     def __next__(self):
         if not self.connected:
             return False
+        
         if self.data:
             d = self.data
             self.data = None
             return d
+        
         c = self._count
+        
         if len(self.work) > c:
             self._count += 1
             return self.work[c]
+
         w = self.work
         t = 0
         while len(w) <= c:
             if not self.connected:
                 return False
+        
             if self.data:
                 d = self.data
                 self.data = None
                 return d
+            
             time.sleep(0.2 + t)
             t += 0.0001
             if t >= 1:
                 print("Work time out!")
                 return False
+        
         self._count += 1
         return w[c]
 

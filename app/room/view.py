@@ -29,7 +29,7 @@ rdict = Rdict()
 def new():
     n = req.args.get('name')
     if n:
-        if n in rdict.nd:
+        if rdict[n]:
             flash("The name is already in used! Please change another one")
             return redirect(url_for('.new'))
         r = Room(name = n, user = current_user)
@@ -56,11 +56,11 @@ def chatting(u):
 def recv_data(u):
     r =rdict[u]
     di = dict(ctx = req.values.get('line'),
-    user = current_user.name,
-    time = time.time())
+        user = current_user.name,
+        time = time.time())
     sj = r.addline(di)
     j = jsonify(sj)
-    getwork(u).add(sj)
+    getwork(u).add(sj.encode())
     return j
 
 @room.route('/rom/<u>/evd')
@@ -98,7 +98,7 @@ def droom(u):
     if not r.user == current_user:
         flash('You have no access')
         return redirect(url_for('.index'))
-    rdict.popu(u)
+    rdict.pop(u)
     flash('Delete success!')
     return redirect(url_for('.index'))
 
@@ -121,13 +121,21 @@ def reset(u):
 
 
 class WebWorker(Worker):
+    def tob(self, ctx):
+        if isinstance(ctx, (bytes, bytearray)):
+            return ctx
+        elif isinstance(ctx, str):
+            return ctx.encode()
+        return str(ctx).encode()
+
     def analyze(self, ctx):
-        return 'data:'+ctx+ '\n\n'
+        ctx = self.tob(ctx)
+        return b'data:'+ ctx+ b'\n\n'
 
 def getwork(u):
     if not u in WORKS:
         r = rdict[u]
         w = WORKS[u] = Work(u)
         for l in r.readlines(loads = False):
-            w.add(l.decode())
+            w.add(l)
     return WORKS[u]

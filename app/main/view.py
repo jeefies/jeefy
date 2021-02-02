@@ -1,3 +1,9 @@
+"""
+views:
+    / (index): Index page of the site
+    /favicon.ico: The image of the site
+    /urls (urls): almost no use
+"""
 from functools import lru_cache
 
 from ..imps import *

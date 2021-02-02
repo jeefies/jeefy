@@ -114,3 +114,7 @@ def readf(fn):
     rsp.headers['Content-Encoding'] = "gzip"
     rsp.headers['Content-Disposition'] = (b"attachment;filename=%s" % rfn.encode()).decode('latin-1')
     return rsp
+
+@app.route('/editor')
+def editor():
+    return render_template("file/editor.html")

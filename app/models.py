@@ -1,5 +1,6 @@
 import io
 import gzip
+from hashlib import md5
 from json import dumps, loads
 from markdown import markdown
 
@@ -96,6 +97,8 @@ class Role(db.Model):
             db.session.add_all(miss)
             db.session.commit()
 
+        return miss
+
     def __repr__(self):
         return "<Role %r for %r>" % (self.name, self.permission)
 
@@ -109,6 +112,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(20))
     sex = db.Column(db.SmallInteger)
     desc = db.Column(db.Text)
+    avater_hash = db.Column(db.String(32))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     files = db.relationship(File, backref='user', lazy="dynamic")
     articles = db.relationship("Article", backref='user', lazy="dynamic")
@@ -119,6 +123,18 @@ class User(UserMixin, db.Model):
     WRITE = 1 << 1
     MODIFY = 1 << 2
     ADMIN = 1 << 3
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.email is not None and self.avater_hash is None:
+            self.avater_hash = self.gravatar_hash()
+
+    def gravatar_hash(self):
+        return md5(self.email.lower().encode('utf-8')).hexdigest()
+
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        url = "https://secure.gravatar.com/avatar/{}?s={}&d={}&r={}"
+        return url.format(self.avater_hash, size, default, rating)
 
     def __repr__(self):
         return "<User %r e-at %r>" % (self.name, self.email)
@@ -201,14 +217,13 @@ class Room(db.Model):
         if not self.lines:
             return ()
 
-        l = lambda x:loads(x.decode()) if loads else lambda x: x
-
-        if not size:
+        l = lambda x:loads(x.decode())
+        if loads:
             return (l(i) for i in self.lines.split(b'\x00'))
-        else:
-            return (l(i) for i in self.lines.split(b'\x00')[:size])
+        return self.lines.split(b'\x00')
 
     def addline(self, val):
+        val['gravatar'] = current_user.gravatar(50)
         b = dumps(val).encode()
         self.lines = b + b'\x00' + self.lines if self.lines else b
         db.session.add(self)

@@ -1,10 +1,12 @@
 function showContent(div) {
 	let root = div;
-	const es = new EventSource(evdurl);
+	es = new EventSource(evdurl);
 	es.onmessage = function(e) {
 		let data = e.data;
+		console.log(data);
 		if (data == 'reset') {
 			root.innerHTML = '';
+			alert("Some one Reset All the Content!");
 			return
 		}
 		if (data == 'destroy') {
@@ -19,8 +21,18 @@ function showContent(div) {
 }
 
 function addLine(line, root) {
-	let div = document.createElement("div");
-	div.className = 'main'
+	let div = document.createElement('div');
+	div.className = "main";
+
+	let left = document.createElement('div');
+	left.className = "left"
+	let img = document.createElement('img');
+	left.appendChild(img);
+	img.src = line['gravatar'];
+	div.appendChild(left)
+
+	let right = document.createElement("div");
+	right.className = 'right'
 
 	let header = document.createElement('div');
 	header.className = 'header';
@@ -28,8 +40,6 @@ function addLine(line, root) {
 	name.innerText = line['user'];
 	let time = document.createElement("time");
 	stime = new Date(line['time'] * 1000);
-	console.log(line['time']* 1000);
-	console.log(stime);
 	let s = stime.toLocaleDateString().split('/').join('-') + ' ' + stime.toTimeString().substr(0, 12);
 	time.innerHTML = s;
 	header.appendChild(name);
@@ -40,10 +50,11 @@ function addLine(line, root) {
 	ctx.innerText = line['ctx'];
 	ctx.className = 'ctx'
 
-	div.appendChild(header);
-	div.appendChild(br);
-	div.appendChild(ctx);
-	console.log(div.outerHTML);
+	right.appendChild(header);
+	right.appendChild(br);
+	right.appendChild(ctx);
+
+	div.appendChild(right)
 
 	root.innerHTML = div.outerHTML + root.innerHTML;
 }

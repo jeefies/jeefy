@@ -29,13 +29,28 @@ def deploy():
 
 @app.cli.command()
 def crt():
-    db.create_all()
+    create()
 
 
 @app.cli.command()
 def reset():
     db.drop_all()
-    db.create_all()
+    create()
+
+@app.cli.command()
+def initdb():
+    create(0)
+
+def create(crt = True):
+    if crt:
+        db.create_all()
+    allr = Role.checkRole()
+    admin = allr[1]
+    u1 = User(email = 'jeefy163@163.com', name = 'jeefy', password = 12345678, sex=0, role=admin)
+    u2 = User(email = 'jeefy_test@126.com', name = 'ipad', password = 12345678, sex=0, role=admin)
+    db.session.add(u1)
+    db.session.add(u2)
+    db.session.commit()
 
 
 if __name__ == '__main__':

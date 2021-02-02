@@ -11,3 +11,9 @@ function getDataInP(p) {
 		p.innerText = str
 	})
 }
+
+function help(mod) {
+	if (mod == 'img') {
+		location.href="/help/profile-image";
+	}
+}
