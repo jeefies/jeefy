@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p id="myText">Hi</p>
+<script>
+	let text = document.getElementById("myText");
+ document.body.onload = () => getDataInP(text);
+</script>
+{% endblock %}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>File Editor</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset='utf-8'>
+	</head>
+	<body>
+		<input type="file" id="File" value="Edit file">
+		<script>
+			const ifile = document.getElementById('File');
+			var src;
+		</script>
+
+		<h1 id="Name" style='display:inline-block'>No File Select</h1>
+		<i onclick="Rename()">Change File Name Here</i><br>
+
+		<div style="height: 50%; width: 100%">
+			<textarea id="Content" disabled='disabled' placeholder="Nothing Here" rows="20"
+				 style="width: 98%; resize: none">
+			</textarea>
+			<script>let area = document.getElementById('Content');area.innerHTML=''; outerHTML = area.outerHTML</script>
+		</div>
+
+		<iframe id="ShowHTML" height='30%' width='100%' scrolling='auto' style='display: none'></iframe>
+		<script>
+			const frame = document.getElementById("ShowHTML");
+			let blob = "Nothing Here...";
+			function Show(b) {
+				frame.srcdoc = b;
+			}
+			Show(blob);
+		</script>
+
+		<div class="Buttons">
+			<button type="button" id='but1'>Edit</button>
+			<button type="button" id='but2'>Save</button>
+			<button type="button" id='but3'>Reload</button>
+			<button type='button' id='preview'>Preview HTML</button>
+		</div>
+
+<script>
+var filename = '';
+var origin = '';
+var preview = false;
+function getFile() {
+	let reader = new FileReader();
+	let file = ifile.files[0];
+	filename = file.name;
+	document.getElementById('Name').innerText = filename;
+
+	reader.onload = function(event) {
+		let result = event.target.result;//.split('\n').join('<br>');
+		origin = result;
+		area.innerHTML = result;
+		Update();
+	}
+	reader.readAsText(file)
+}
+ifile.onchange = getFile;
+
+function Edit() {
+	area.disabled = false;
+	let but = document.getElementById('but1');
+	but.onclick = EndEdit;
+	but.innerText = 'End Edit';
+	Update();
+}
+
+function EndEdit() {
+	area.disabled = true;
+	let but = document.getElementById('but1');
+	but.onclick = Edit;
+	but.innerText = 'Edit';
+	Update()
+}
+document.getElementById('but1').onclick = Edit;
+
+function Save() {
+	while (!filename) {
+		alert("Please give your file a name");
+		filename = prompt("Change your file name " + filename + ' to:', filename);
+	}
+	let text = area.innerHTML;
+	let blob = new Blob([text], {'type': 'application/octet-stream'});
+	let a = document.createElement('a');
+	a.style.display = 'none';
+	a.download = filename;
+	let href = URL.createObjectURL(blob);
+	a.href = href;
+	document.body.appendChild(a);
+	{
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(href);
+	}
+}
+document.getElementById('but2').onclick = Save;
+
+function Reload() {
+	console.log("Reload!");
+	area = document.getElementById('Content');
+	area.value = origin;
+	Update();
+}
+document.getElementById('but3').onclick = Reload;
+
+function Update() {
+	if (preview) {
+		frame.style.display = 'initial';
+		Show(area.value);
+	} else {
+		frame.style.display = 'none';
+	}
+}
+
+function Preview() {
+	let btn = document.getElementById('preview');
+	if (!preview) {
+		preview = true;
+		Update();
+		btn.innerText = 'End Preview';
+	} else {
+		preview = false;
+		Update();
+		btn.innerText = 'Preview HTML';
+	}
+}
+document.getElementById('preview').onclick = Preview
+
+function Rename() {
+	let result = prompt("Change your file name " + filename + ' to:', filename);
+
+	if (result == filename) {
+		alert('Nothing Changed...')
+	} else {
+		filename = result;
+		document.getElementById('Name').innerHTML = filename;
+		alert("Rename Succeed!")
+	}
+}
+
+</script>
+	</body>
+</html>

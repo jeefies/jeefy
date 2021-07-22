@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block tit %}File - {{ f.fn }}{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/file-show.css')}}">
+</style>
+{% endblock %}
+
+{% block headscripts%}
+{{ super() }}
+<script src="/static/js/file.js"></script>
+<script>
+const dlurl = "{{ urls['dl'] }}";
+const uplurl = "{{ urls['upl'] }}";
+const renurl = "{{ urls['ren'] }}";
+const delurl = "{{ urls['dele'] }}";
+const indexurl = "{{ urls['index'] }}";
+const filename = "{{ f.fn }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<h1 display="inline">{{ f.fn }}</h1><p id="Public"></p>
+<div class="Barr">
+	{% if f.isOwn() %}
+	<p id="Rename" onclick="Rename()"><big>Rename</big></p>
+	{% endif %}
+	<p id="Download" onclick="Download()">Download</p>
+	<p onclick="location.reload(true)">Reload</p>
+	{% if f.isOwn() %}
+	<p onclick="Delete()">Delete</p>
+	{% endif %}
+</div>
+{% set ctx, text = f.text() %}
+{% if text %}
+<div id="Content">
+	{{ ctx.replace('\n', '<br>')|safe }}
+</div>
+{% if f.isOwn() %}
+	<script>document.body.onload = () => Main()</script>
+	<button type="button" id="Butt1">Edit</button>
+	<button type="button" id="Butt2" style="display: none">Upload</button>
+	<button type="button" id="Butt3" style="display: none">Download Changed</button>
+{% endif %}
+{% else %}
+<div onclick="Download()">
+	<h2>No support for Edit Text</h2>
+</div>
+{% endif %}
+
+{% endblock %}

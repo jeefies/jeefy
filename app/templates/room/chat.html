@@ -1,0 +1,44 @@
+{% extends "room/base.html" %}
+
+
+{% block tit %}Room - {{ room.name }}{% endblock %}
+
+{% block styles %}
+<link type="text/css" href="{{ url_for('static', filename='css/room-chat.css')}}" rel="stylesheet">
+{% endblock styles %}
+
+{% block headscripts %}
+{{ super() }}
+<script src="/static/js/content.js"></script>
+<script src="/static/js/md5.js"></script>
+{% endblock %}
+
+{% block navbar %}
+<div class="Header">
+	<label class="Header" onclick="goBackMain()">Back  </label>
+	<h3 class="Header">Chatting {{ room.name }}</h3>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="Contents" id="Contents">
+	<script>
+		ctt = document.getElementById('Contents');
+		evdurl = "{{ url_for('.event_data', u = _u)}}"
+		document.body.onload = () => showContent(ctt);
+		dataurl = "{{ u }}";
+		mainurl = "{{ url_for('room.index' )}}";
+		suburl = "{{ url_for('.recv_data', u = _u) }}";
+	</script>
+</div>
+<div class="InputLine">
+	<input type="text" name="line" id="Line" required="required" autofocus="autofocus" onkeypress="KeyPress(event)">
+	<input type="submit" value="Submit" onclick="Submit()">
+</div>
+{% if current_user == room.user %}
+<div class="Manage">
+	<button type="button" onclick="Go('{{ url_for('.droom', u = _u) }}')">Delete Room</button>
+	<button type="button" onclick="Go('{{ url_for('.reset', u = _u) }}')">Reset Content</button>
+</div>
+{% endif %}
+{% endblock %}
