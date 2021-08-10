@@ -11,12 +11,14 @@ class Config:
     def init_app(app):
         pass
 
+class PyAnywhere(Config):
+    SQLALCHEMY_DATABASE_URI = "mysql://jeefy:mysqlpwd@jeefy.mysql.pythonanywhere-services.com/default"
 
 class Debug(Config):
     DEBUG = True
 
 class Heroku(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "postgres://nqtbkqvkpfkabx:eb5a1a664d70e6be1be91414211a7b28b90d4d7145c3c07e7c15e701f2579999@ec2-34-197-212-240.compute-1.amazonaws.com:5432/d8el63dec4iqjb")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "mysql://jeefy.mysql.pythonanywhere-services.com")
     SSL_REDIRECT = True if os.getenv('DYNO') else False
     PROXYFIX_USE = True if os.getenv('PROXYFIX_USE') else False
 
