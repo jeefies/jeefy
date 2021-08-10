@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Local 163 song getter</title>
+		<meta name="viewport" content="width=devide-width, initial-scale=1.0">
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<input type="text" name="Id" autofocus="autofocus" required="required" id="inp">
+		<input onclick="get_song()" type="submit" value="Get it">
+	</body>
+<script>
+function get_song() {
+	let inp = document.getElementById("inp");
+
+	let text = inp.value;
+	console.log(text);
+
+	if (!isNaN(text)) {
+		let xhr = new XMLHttpRequest();
+		let url = "https://music.163.com/song/media/outer/url?id=" + text;
+		xhr.open("get", url, false)
+		xhr.send(null);
+		if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+			alert(xhr.responseText);
+		} else {
+			alert(xhr.statusText);
+		}
+
+
+
+		let a = document.createElement("a");
+		a.download = 'song.mp3';
+		a.target = "_blank";
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	}
+
+	inp.value = "";
+	inp.focus();
+}
+</script>
+</html>

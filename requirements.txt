@@ -8,7 +8,6 @@ flask-sqlalchemy
 flask-mail
 flask-sslify
 flask-migrate
-psycopg2
 flask-login
 flask-pagedown
 markdown
