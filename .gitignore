@@ -1,0 +1,13 @@
+__pycache__
+build
+dist
+env
+*.swp
+*.swo
+*.sqlite
+migrations
+.idea
+
+github
+
+/app/templates/*/*.js
