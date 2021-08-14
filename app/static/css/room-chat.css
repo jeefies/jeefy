@@ -2,18 +2,18 @@ div.Header {
 	border-bottom: thin gray solid;
 	height: 10%;
 }
-div.Header label{
-	width: 10%;
+div.Header label { /* Back */
 	font-weight: bold;
 	text-align: left;
 	line-height: 1em;
 	display: inline;
-	white-space: nowrap;
 	border-right: thin black solid;
-	color: gray;
+	color: black;
+
+	transition: background-color 0.3s;
 }
 div.Header label:hover {
-	background-color: red;
+	background-color: rgba(255, 0, 0, 0.4);
 }
 div.Header h3 {
 	width: 85%;
@@ -37,7 +37,7 @@ div.InputLine {
 	position: fixed;
 	width: 98%;
 	display: inline;
-	top: 90%;
+	top: 92%;
 	left: 1em;
 }
 div.InputLine input[type="text"] {
@@ -64,7 +64,7 @@ div.InputLine input {
 div.Contents {
 	position: absolute;
 	width: 98%;
-	height: 80%;
+	height: calc(90% - 20px);
 	border-bottom: thin black solid;
 	display: inline-block;
 	overflow-y: auto;
@@ -127,12 +127,12 @@ div.Contents p.ctx {
 		max-height: 8%;
 	}
 	div.Contents {
-		height: 80%;
+		height: calc(80% + 10px);
 	}
 	div.InputLine {
 		top: 87%;
 	}
 	div.Manage {
-		top: 95%;
+		top: calc(90% + 20px);
 	}
 }
