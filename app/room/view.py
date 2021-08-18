@@ -91,13 +91,13 @@ def droom(u):
     r = rdict[u]
     w = getwork(u)
     w.call('send', 'destroy')
-    w.destroy()
     if not r:
         flash('no such room')
         return redirect(url_for('.index'))
     if not r.user == current_user:
         flash('You have no access')
         return redirect(url_for('.index'))
+    w.destroy()
     rdict.pop(u)
     flash('Delete success!')
     return redirect(url_for('.index'))
@@ -116,7 +116,7 @@ def reset(u):
         return redirect(url_for('.index'))
     r.reset()
     w.reset()
-    flash('Reset success!')
+    flash('You have Clear All Chatting Histories')
     return redirect(url_for('.chatting', u = u))
 
 
@@ -133,7 +133,7 @@ class WebWorker(Worker):
         return b'data:'+ ctx+ b'\n\n'
 
 def getwork(u):
-    if not u in WORKS:
+    if u not in WORKS:
         r = rdict[u]
         w = WORKS[u] = Work(u)
         for l in r.readlines(loads = False):

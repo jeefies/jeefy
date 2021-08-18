@@ -1,138 +1,179 @@
-div.Header {
-	border-bottom: thin gray solid;
-	height: 10%;
-}
-div.Header label { /* Back */
-	font-weight: bold;
-	text-align: left;
-	line-height: 1em;
-	display: inline;
-	border-right: thin black solid;
-	color: black;
+div.Head {
+	height: 4vh;
 
-	transition: background-color 0.3s;
+	display: flex;
+	/* border-bottom: medium dashed rgba(100, 100, 100, 0.5); */
 }
-div.Header label:hover {
+
+div.BackImg {
+	height: 4vh;
+	/* width: 60px; */
+
+	border-right: 3px solid lightgray;
+	
+	display: inline-block;
+
+	transition: .4s background-color;
+	
+}
+
+div.Manage {
+	height: 4vh;
+
+	border-left: 3px solid lightgray;
+
+	display: inline-block;
+
+	transition: .4s background-color;
+	margin-left: 0.8vh;
+}
+
+div.Manage img {
+	max-height: 100%;
+}
+
+div.BackImg img {
+	max-height: 100%;
+	opacity: 0.6;
+}
+
+div.Manage:hover {
 	background-color: rgba(255, 0, 0, 0.4);
 }
-div.Header h3 {
-	width: 85%;
-	display: inline-block;
-	margin-block-start: 0em;
-	margin-block-end: 0em;
-	text-align: center;
-}
-div.Manage {
-	position: fixed;
-	right: 2%;
-	width: 20em;
-	top: 3px;
-}
-div.Manage button {
-	font-size: 0.7em;
-	float: right;
-	margin: 0em 0.45% 0em 0.45%;
-}
-div.InputLine {
-	position: fixed;
-	width: 98%;
-	display: inline;
-	top: 92%;
-	left: 1em;
-}
-div.InputLine input[type="text"] {
-	width: 79%;
-	border-width: 1%;
-	height: 1.17em;
-	font-size: 1.1em;
-	border-radius: 10px;
-	max-height: 8%;
-	margin: 1% 0 1% 0;
-}
-div.InputLine input[type="submit"] {
-	position: absolute;
-	width: 15%;
-	font-size: 1.1em;
-	margin-right: 1.5%;
-	right: 0em;
-	max-height: 100%;
-	margin: 1% 0 1% 0;
-}
-div.InputLine input {
-	white-space: nowrap;
-}
-div.Contents {
-	position: absolute;
-	width: 98%;
-	height: calc(90% - 20px);
-	border-bottom: thin black solid;
-	display: inline-block;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-div.Contents::-webkit-scrollbar-x{
-	display: none
+
+div.BackImg:hover {
+	background-color: red;
 }
 
-div.Contents div.main {
-	border-bottom: 0.5px gray dashed;
-}
-div.Contents div.left {
-	width : 3.5em;
-	max-width: 15%;
+div.RoomName {
 	display: inline-block;
+	position: relative;
+	z-index: -1;
+
+	width: calc(100% - 4vh - 4.8vh - 7px);
+
+	height: 4vh;
+
+	font-size: 2.2vh;
+
+	padding-top: 0.9vh;
 }
-div.Contents div.left img {
-	width: 3.1em;
-	max-width: 99%;
-	margin-top: 1%
-}
-div.Contents div.right {
-	display: inline-block;
-	width: 82.5%;
-	margin-left: 1%;
-	margin-right: 1%;
-	transform: translateY(-2%);
-}
-div.Contents div.header {
-	width: 95%
-}
-div.Contents div.header p {
-	font-weight: bold;
-	margin-block-start: 0em;
-	margin-block-end: 0em;
-	width: 50%;
-	float: left;
-}
-div.Contents div.header time {
-	float: right;
-	color: gray;
-	font-size: 0.8em;
-	transform: translateY(0.2em);
-}
-div.Contents p.ctx {
+
+div.RoomName span {
 	width: 100%;
-	font-size: 1em;
-	text-align: left;
-	margin-block-start: 0.3em;
-	margin-block-end: 0.3em;
-	left: 1em;
-	transform: translateX(1em);
+	text-align: center;
+	display: inherit;
+
+	font-weight: bold;
 }
-@media (max-width: 568px) {
-	div.InputLine input[type="submit"] {
-		position: static;
-		width: auto;
-		height: auto;
-		max-height: 8%;
-	}
-	div.Contents {
-		height: calc(80% + 10px);
-	}
-	div.InputLine {
-		top: 87%;
-	}
-	div.Manage {
-		top: calc(90% + 20px);
-	}
+
+
+div.Messages {
+	height: calc(90vh - 2.5em);
+	border-bottom: thin solid lightgray;
+
+	background-color: #58a;
+
+	overflow-y: auto;
+	scroll-snap-type: mandatory;
+}
+
+div.Message {
+	margin-bottom: 10px;
+}
+
+div.Message div.Time {
+	background-color: rgba(255, 255, 255, 0.4);
+	display: inline-block;
+	margin-left: 1.7em;
+	padding: 2px;
+}
+
+div.Message div.Name {
+	background-color: rgba(255, 255, 255, 0.4);
+	display: inline-block;
+	padding: 2px;
+
+	margin-left: 5px;;
+	margin-bottom: 5px;
+}
+
+div.Message div.Content {
+	font-size: 1.2em;
+	background-color: rgba(0, 200, 0, 0.7);
+	display: inline;
+	margin-left: 2em;
+	padding: 3px;
+
+	border-radius: 4px;
+}
+
+div.Messages div.MidTime {
+	position: relative;
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+	left: 50%;
+	transform: translateX(-50%);
+	display: inline-block;
+
+	padding: 2px;
+
+	border-radius: 20%;
+}
+
+div.InputLine {
+	position: absolute;
+	bottom: 2vh;
+	width: 100%;
+	font-size: 1.2em;
+}
+
+div.InputLine input.In {
+	width: calc(100% - 100px - 20px - 16px - 2px - 1px);
+	/* border-left: 8px;
+	 * border-right: 8px;
+	 * padding: 1px;
+	 */
+}
+
+div.InputLine input.Submit {
+	width: 100px;
+	margin-left: 2px;
+	margin-right: 2px;
+
+	/* padding-left: 8px;
+	 * padding-right: 8px;
+	 * border-left: 2px;
+	 * border-right: 2px;
+	 */
+}
+
+div.ManageBox {
+	position: absolute;
+	right: 2vw;
+	top: 6vh;
+
+	box-shadow: 3px 3px 4px rgba(0, 0, 0, .5);
+
+	width: 20vw;
+	min-width: 200px;
+
+	background-color: #655;
+	color: white;
+
+	padding: 1em;
+
+	opacity: 0;
+
+	animation-duration: 0.5s;
+}
+
+@keyframes show {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+@keyframes hide {
+	from {opacity: 1;}
+	to {opacity: 0;}
 }

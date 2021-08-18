@@ -7,6 +7,8 @@ from config import config
 from .reg import unauthorized_handler
 
 moment = Moment()
+# can't just replace it with cdn, it not only provide jquery and bootstrap
+# so next web, i must take it out in order to short applycations
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 # login manager config
