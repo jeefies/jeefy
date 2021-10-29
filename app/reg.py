@@ -1,4 +1,4 @@
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, request
 
 
 def regist(app, gls, all_):
@@ -14,4 +14,4 @@ def regist(app, gls, all_):
 
 def unauthorized_handler():
     flash("Please Log in First!")
-    return redirect(url_for('user.loginpage'))
+    return redirect(url_for('user.loginpage') + '?back=' + request.path)

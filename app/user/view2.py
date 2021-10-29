@@ -16,13 +16,15 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 @user.route('/')
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for(".self"))
     return render_template('user/index.html')
 
 @user.route('/u/<name>')
 def see(name):
     user = User.query.filter_by(name = name).first_or_404()
     self = user == current_user
-    print(self)
+   # print(self)
     return render_template('user/user.html', user = user, self = self)
 
 @user.route('/self')
@@ -32,6 +34,9 @@ def self():
 
 @user.route('/--list')
 def listus():
+    if not current_user.is_authenticated:
+        abort(404)
+        return
     if req.args.get('self') == 'true':
         try:
             user = User.query.filter_by(name = current_user.name).first()
@@ -39,6 +44,8 @@ def listus():
                 return jsonify(user.json())
         except:
             pass
+    if current_user.name not in  ('jeefy', 'ipad'):
+        abort(404)
     return render_template('user/all.html', users = User.query.all())
 
 @user.route('/user-detail', methods = ["GET", "POST"])

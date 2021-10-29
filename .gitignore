@@ -5,9 +5,12 @@ env
 *.swp
 *.swo
 *.sqlite
+*.zip
+*.tar
 migrations
 .idea
 
 github
 
 /app/templates/*/*.js
+/app/static/files/files.zip

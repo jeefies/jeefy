@@ -109,6 +109,7 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(32), unique=True, nullable=False)
     birth = db.Column(db.Date)
+    # it's dangerous that not to encode the password
     password = db.Column(db.String(20))
     sex = db.Column(db.SmallInteger)
     desc = db.Column(db.Text)
@@ -118,6 +119,7 @@ class User(UserMixin, db.Model):
     articles = db.relationship("Article", backref='user', lazy="dynamic")
     rooms = db.relationship("Room", backref='user', lazy="dynamic")
 
+    # permission definations
     NONE = 0
     READ = 1 << 0
     WRITE = 1 << 1

@@ -6,8 +6,8 @@ from wtforms.validators import DataRequired, Length, EqualTo, Email, Regexp
 from flask_pagedown.fields import PageDownField
 
 class RegistForm(FlaskForm):
-    name = StringField("Name:", validators = [DataRequired()])
-    email = StringField("Email:", validators = [Email(), DataRequired()])
+    name = StringField("Name:", validators = [DataRequired(), Length(0, 20, message="the given name is too long, at most 20 characters")])
+    email = StringField("Email:", validators = [Email(), DataRequired(), Length(1, 20, message="email addr is too long")])
     role = SelectField("Role", [DataRequired()], choices = (('Student', 'Student'),
         ('Teacher', 'Teacher'), ('Worker', 'Worker'), ('Other', 'Other'),
         ('Visitor', 'Visitor'),), default="Other")
