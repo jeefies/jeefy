@@ -30,20 +30,19 @@ def deploy():
 
 
 @app.cli.command()
-def crt():
-    create()
-
-
-@app.cli.command()
 def reset():
     db.drop_all()
-    create()
+    _create()
 
 @app.cli.command()
 def initdb():
-    create(0)
+    _create(0)
 
-def create(crt = True):
+@app.cli.command()
+def create():
+    _create()
+
+def _create(crt = True):
     if crt:
         db.create_all()
     allr = Role.checkRole()

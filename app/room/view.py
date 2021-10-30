@@ -130,6 +130,7 @@ class WebWorker(Worker):
 
     def analyze(self, ctx):
         ctx = self.tob(ctx)
+        #print(self, "analyze data")
         return b'data:'+ ctx+ b'\n\n'
 
 def getwork(u):

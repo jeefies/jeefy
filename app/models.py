@@ -159,11 +159,6 @@ class User(UserMixin, db.Model):
             return True
         return False
 
-    def generate_token(self, exp):
-        s = Serializer(current_app.config["SECRET_KEY"], exp)
-        di = dict(name=self.name, sec=self.password)
-        return s.dumps(di).decode()
-
     def json(self):
         # male for boy
         return dict(name=self.name,

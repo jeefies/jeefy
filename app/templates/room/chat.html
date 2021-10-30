@@ -8,6 +8,7 @@
 		<link type="text/css" href="{{ url_for('static', filename='css/room-chat.css')}}" rel="stylesheet">
 		
 		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/js/content.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<div class="Head">
@@ -54,6 +55,5 @@
 			mainurl = "{{ url_for('room.index' )}}";
 			suburl = "{{ url_for('.recv_data', u = _u) }}";
 		</script>
-		<script src="/static/js/content.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>
