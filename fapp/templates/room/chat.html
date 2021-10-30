@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Jeefy - Room - {{ room.name }}</title>
+		
+		<link type="text/css" href="{{ url_for('static', filename='css/room-chat.css')}}" rel="stylesheet">
+		
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/static/js/content.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="Head">
+			<div class="BackImg" onclick="goBackMain()">
+				<img src="/static/imgs/bmp/BackButton2.bmp" alt="backButton" />
+			</div>
+
+			<div class="RoomName">
+				<span>{{ room.name }}</span>
+			</div>
+
+			<div class="Manage" onclick="showManager()">
+				<img src="/static/imgs/svg/ThreeDots.svg" alt="Configure" />
+			</div>
+		</div>
+
+		<div class="Messages" id="MSGS">
+			{% for msg in get_flashed_messages() %}
+			<div class="MidTime">
+				{{ msg }}
+			</div>
+			{% endfor %}
+		</div>
+		
+		<div class="InputLine">
+			<input type="text" name="line" required="required" autofocus="autofocus" onkeypress="KeyPress(event)" class="In" id="Line">
+			<input type="submit" value="Submit" onclick="Submit()" class="Submit">
+		</div>
+
+		<div class="ManageBox">
+			{% if current_user == room.user %}
+			<p onclick="ClearContent('{{ url_for('.reset', u = _u) }}')">Clear Content</p>
+			<p onclick="Go('{{ url_for('.droom', u = _u) }}')">Destroy Room</p>
+			{% endif %}
+			<p onclick="goBackMain()">Room Index</p>
+		</div>
+
+		<script>
+			ctt = document.getElementById('MSGS');
+			document.body.onload = () => showContent(ctt);
+
+			evdurl = "{{ url_for('.event_data', u = _u)}}"
+			dataurl = "{{ u }}";
+			mainurl = "{{ url_for('room.index' )}}";
+			suburl = "{{ url_for('.recv_data', u = _u) }}";
+		</script>
+	</body>
+</html>

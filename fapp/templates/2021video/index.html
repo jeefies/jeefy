@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block tit %}Song{% endblock %}
+
+{% block content %}
+<h1>Download documents</h1>
+<a href="{{ url_for('static', filename='pdfs/imap.pdf')}}" style="text-decoration: none">Imap.pdf</a><br>
+<a href="{{ url_for('static', filename='pdfs/smtp.pdf')}}" style="text-decoration: none">Smtp.pdf</a><br>
+<a href="{{ url_for('static', filename='pdfs/pop.pdf')}}" style="text-decoration: none">Pop.pdf</a><br>
+{% endblock %}

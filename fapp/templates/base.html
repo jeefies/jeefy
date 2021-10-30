@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	{% block html %}
+	<head>
+		{% block head %}
+		<title>Jeefy - {% block tit %}Home{% endblock %}</title>
+
+		{% block icon %}
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico' )}}" type='image/x-icon'>
+		<link rel="icon" href="{{ url_for('static', filename='favicon.ico' )}}" type="image/x-icon">
+		{% endblock icon %}
+
+		{% block metas %}
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		{% endblock metas %}
+
+		{% block styles %}
+		<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		{% endblock styles%}
+		
+		{% block headscripts %}
+		{% endblock headscripts %}
+
+		{% endblock head %}
+	</head>
+	<body>
+		{% block body %}
+
+		{% block navbar %}
+		<div class="navbar navbar-inverse" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle"
+						data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="{{ url_for('main.index') }}">Jeefy</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url_for('user.index') }}">User</a></li>
+						<li><a href="{{ url_for('mfile.index') }}">Download</a></li>
+						<li><a href="{{ url_for('song163.index') }}">Song</a></li>
+						<li><a href="{{ url_for('room.index' )}}">Chat</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						{% if current_user.is_authenticated %}
+						<li class="dropdown">
+							<a href="" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="{{ url_for('user.self') }}">Info</a></li>
+								<li><a href="{{ url_for('user.logout') }}">Log out</a></li>
+							</ul>
+						</li>
+						{% else %}
+						<li class="dropdown">
+							<a href="" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="{{ url_for('user.regist') }}">Regist</a></li>
+								<li><a href="{{ url_for('user.loginpage') }}">Log In</a></li>
+							</ul>
+						</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		{% endblock navbar %}
+		<div class="container">
+			{% for msg in get_flashed_messages() %}
+			<div class='alert alert-info'>
+				{{ msg }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+			{% endfor %}
+		</div>
+
+		<div class="container">
+		{% block content %}
+			<h2>Hello {% if current_user.is_authenticated %}{{ current_user.name }}
+				{% else %}Stranger{% endif %}</h2>
+		{% endblock content %}
+		</div>
+
+		{% endblock body %}
+
+		{% block scripts %}
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		{% endblock scripts %}
+
+	</body>
+	{% endblock html %}
+</html>

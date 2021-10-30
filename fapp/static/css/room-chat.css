@@ -1,0 +1,179 @@
+div.Head {
+	height: 4vh;
+
+	display: flex;
+	/* border-bottom: medium dashed rgba(100, 100, 100, 0.5); */
+}
+
+div.BackImg {
+	height: 4vh;
+	/* width: 60px; */
+
+	border-right: 3px solid lightgray;
+	
+	display: inline-block;
+
+	transition: .4s background-color;
+	
+}
+
+div.Manage {
+	height: 4vh;
+
+	border-left: 3px solid lightgray;
+
+	display: inline-block;
+
+	transition: .4s background-color;
+	margin-left: 0.8vh;
+}
+
+div.Manage img {
+	max-height: 100%;
+}
+
+div.BackImg img {
+	max-height: 100%;
+	opacity: 0.6;
+}
+
+div.Manage:hover {
+	background-color: rgba(255, 0, 0, 0.4);
+}
+
+div.BackImg:hover {
+	background-color: red;
+}
+
+div.RoomName {
+	display: inline-block;
+	position: relative;
+	z-index: -1;
+
+	width: calc(100% - 4vh - 4.8vh - 7px);
+
+	height: 4vh;
+
+	font-size: 2.2vh;
+
+	padding-top: 0.9vh;
+}
+
+div.RoomName span {
+	width: 100%;
+	text-align: center;
+	display: inherit;
+
+	font-weight: bold;
+}
+
+
+div.Messages {
+	height: calc(90vh - 2.5em);
+	border-bottom: thin solid lightgray;
+
+	background-color: #58a;
+
+	overflow-y: auto;
+	scroll-snap-type: mandatory;
+}
+
+div.Message {
+	margin-bottom: 10px;
+}
+
+div.Message div.Time {
+	background-color: rgba(255, 255, 255, 0.4);
+	display: inline-block;
+	margin-left: 1.7em;
+	padding: 2px;
+}
+
+div.Message div.Name {
+	background-color: rgba(255, 255, 255, 0.4);
+	display: inline-block;
+	padding: 2px;
+
+	margin-left: 5px;;
+	margin-bottom: 5px;
+}
+
+div.Message div.Content {
+	font-size: 1.2em;
+	background-color: rgba(0, 200, 0, 0.7);
+	display: inline;
+	margin-left: 2em;
+	padding: 3px;
+
+	border-radius: 4px;
+}
+
+div.Messages div.MidTime {
+	position: relative;
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+	left: 50%;
+	transform: translateX(-50%);
+	display: inline-block;
+
+	padding: 2px;
+
+	border-radius: 20%;
+}
+
+div.InputLine {
+	position: absolute;
+	bottom: 2vh;
+	width: 100%;
+	font-size: 1.2em;
+}
+
+div.InputLine input.In {
+	width: calc(100% - 100px - 20px - 16px - 2px - 1px);
+	/* border-left: 8px;
+	 * border-right: 8px;
+	 * padding: 1px;
+	 */
+}
+
+div.InputLine input.Submit {
+	width: 100px;
+	margin-left: 2px;
+	margin-right: 2px;
+
+	/* padding-left: 8px;
+	 * padding-right: 8px;
+	 * border-left: 2px;
+	 * border-right: 2px;
+	 */
+}
+
+div.ManageBox {
+	position: absolute;
+	right: 2vw;
+	top: 6vh;
+
+	box-shadow: 3px 3px 4px rgba(0, 0, 0, .5);
+
+	width: 20vw;
+	min-width: 200px;
+
+	background-color: #655;
+	color: white;
+
+	padding: 1em;
+
+	opacity: 0;
+
+	animation-duration: 0.5s;
+}
+
+@keyframes show {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+@keyframes hide {
+	from {opacity: 1;}
+	to {opacity: 0;}
+}
