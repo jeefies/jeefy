@@ -1,7 +1,11 @@
 var totalLine = 0;
 var viewLine = 0;
+let mb_mouse_in = false;
 
 function showContent(div) {
+	let mb = document.getElementsByClassName("ManageBox")[0]
+	mb.onmouseleave = () => { $('div.ManageBox').css('animation-name', "hide").css("opacity", "0"); mb_mouse_in = false };
+	mb.onmouseenter = () => { mb_mouse_in = true };
 	let root = div;
 	es = new EventSource(evdurl);
 	es.onmessage = function(e) {
@@ -138,7 +142,3 @@ function showManager() {
 	}, 2000)
 }
 
-let mb_mouse_in = false;
-let mb = document.getElementsByClassName("ManageBox")[0]
-mb.onmouseleave = () => { $('div.ManageBox').css('animation-name', "hide").css("opacity", "0"); mb_mouse_in = false };
-mb.onmouseenter = () => { mb_mouse_in = true };
