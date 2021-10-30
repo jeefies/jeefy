@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import os
-from app import create_app, db
-from app.models import File, User, Room, Role, Article
+from fapp import create_app, db
+from fapp.models import File, User, Room, Role, Article
 from flask_migrate import Migrate, upgrade, init
 
 
