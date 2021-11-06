@@ -62,6 +62,8 @@ def create_app(cfg):
 
     from .room import room as room_bp
     app.register_blueprint(room_bp, url_prefix="/chatroom")
+    from .room import room2 as room_bp2
+    app.register_blueprint(room_bp2, url_prefix="/chatroom2")
 
     from .help import jhelp as help_bp
     app.register_blueprint(help_bp, url_prefix="/help")

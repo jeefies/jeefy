@@ -1,5 +1,6 @@
 import io
 import gzip
+import time
 from hashlib import md5
 from json import dumps, loads
 from markdown import markdown
@@ -207,7 +208,7 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, nullable=False)
     lines = db.Column(db.LargeBinary)
-    ius = db.Column(db.Text)
+    linenu = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def readlines(self, size=None, loads = True):
@@ -218,11 +219,23 @@ class Room(db.Model):
         if loads:
             return (l(i) for i in self.lines.split(b'\x00'))
         return self.lines.split(b'\x00')
+    
+    def getline(self, count):
+        if not self.lines:
+            return b''
+        s = 0
+        for i in range(count - 1):
+            s = self.lines.index(b'\x00', s)
+            
+        se = self.lines.index(b'\x00', s)
+        return self.lines[s + 1:se]
 
     def addline(self, val):
-        val['gravatar'] = current_user.gravatar(50)
+        val['id'] = self.linenu
+        val['time'] = time.time()
         b = dumps(val).encode()
         self.lines = b + b'\x00' + self.lines if self.lines else b
+        self.linenu += 1
         db.session.add(self)
         db.session.commit()
         return b.decode()
@@ -234,6 +247,9 @@ class Room(db.Model):
 
     def url(self):
         return url_for('room.room_', roomn=self.name)
+    
+    def url2(self):
+        return url_for('room2.jump', room = self.name)
 
     def __repr__(self):
         return "<Room %r>" % self.name

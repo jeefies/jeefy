@@ -50,7 +50,7 @@ def chatting(u):
     if not r:
         flash('no such room')
         return redirect(url_for('.index'))
-    return render_template('room/chat.html', room = r, u = url_for('.jget', u = u), _u = u)
+    return render_template('room/chat.html', room = r, u = url_for('.jget', u = u), _u = u, roomurl = req.path)
 
 @room.route('/rom/<u>/data', methods=['POST'])
 def recv_data(u):
