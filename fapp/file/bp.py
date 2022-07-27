@@ -1,3 +1,3 @@
 from flask import Blueprint
 
-mfile = Blueprint('mfile', __name__)
+filebp = Blueprint('file', __name__)

@@ -5,11 +5,11 @@ from hashlib import md5
 from json import dumps, loads
 from markdown import markdown
 
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous.url_safe import URLSafeSerializer  as Serializer
 from flask import current_app, url_for
-from flask_login import UserMixin, current_user
+# from flask_login import UserMixin, current_user
 
-from . import db, loginmanager
+from . import db #, loginmanager
 
 
 class File(db.Model):
@@ -77,22 +77,15 @@ class Role(db.Model):
     __tablename__ = "roles"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(12), unique=True)
-    permission = db.Column(db.SmallInteger)
     users = db.relationship("User", backref='role', lazy="dynamic")
-
-    def addper(self, val):
-        self.permission |= val
-        db.session.add(self)
-        db.session.commit()
 
     @staticmethod
     def checkRole():
-        names = [('Student', 0b111), ('Admin', 0b1111), ('Teacher', 0b111), ('Other', 0b111),
-                 ('Worker', 0b111), ('Visitor', 0b11)]
+        names = ['Student', 'Teacher', 'Worker', 'Other', 'Admin']
         miss = []
-        for name, per in names:
+        for name in names:
             if not Role.query.filter_by(name=name).all():
-                r = Role(name=name, permission=per)
+                r = Role(name=name)
                 miss.append(r)
         else:
             db.session.add_all(miss)
@@ -101,58 +94,44 @@ class Role(db.Model):
         return miss
 
     def __repr__(self):
-        return "<Role %r for %r>" % (self.name, self.permission)
+        return "<Role %r>" % (self.name)
 
 
-class User(UserMixin, db.Model):
+class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(32), unique=True, nullable=False)
+    email_verified = db.Column(db.Boolean, default = False)
     birth = db.Column(db.Date)
     # it's dangerous that not to encode the password
     password = db.Column(db.String(20))
-    sex = db.Column(db.SmallInteger)
+    sex = db.Column(db.Boolean)
     desc = db.Column(db.Text)
-    avater_hash = db.Column(db.String(32))
+
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    
     files = db.relationship(File, backref='user', lazy="dynamic")
-    articles = db.relationship("Article", backref='user', lazy="dynamic")
     rooms = db.relationship("Room", backref='user', lazy="dynamic")
 
-    # permission definations
-    NONE = 0
-    READ = 1 << 0
-    WRITE = 1 << 1
-    MODIFY = 1 << 2
-    ADMIN = 1 << 3
-
-    def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
-        if self.email is not None and self.avater_hash is None:
-            self.avater_hash = self.gravatar_hash()
-
-    def gravatar_hash(self):
+    def avatar_hash(self):
         return md5(self.email.lower().encode('utf-8')).hexdigest()
 
-    def gravatar(self, size=100, default='identicon', rating='g'):
-        url = "https://secure.gravatar.com/avatar/{}?s={}&d={}&r={}"
-        return url.format(self.avater_hash, size, default, rating)
+    def avatar(self, size=100, default='retro'):
+        if not size:
+            url = "https://cravatar.cn/avatar/{}?d={}"
+            return url.format(self.avatar_hash(), default)
+
+        url = "https://cravatar.cn/avatar/{}?s={}&d={}"
+        return url.format(self.avatar_hash(), size, default)
 
     def __repr__(self):
         return "<User %r e-at %r>" % (self.name, self.email)
 
-    def can(self, per):
-        return per & self.role.permission
-
-    @property
-    def permission(self):
-        return self.role.permission
-
     def confirm(self, token):
         s = Serializer(current_app.config["SECRET_KEY"])
         try:
-            di = s.loads(token.encode())
+            di = s.loads(token)
         except:
             return False
 
@@ -162,12 +141,15 @@ class User(UserMixin, db.Model):
 
     def json(self):
         # male for boy
-        return dict(name=self.name,
-                    sex="male" if self.sex else "female",
-                    role=self.role.name,
-                    permission=self.permission,
-                    description=self.desc,
-                    url="/user/%r" % self.id)
+        info = dict(name = self.name,
+                    email = self.email,
+                    sex = "男" if self.sex else "女",
+                    role = self.role.name,
+                    description = self.desc,
+                    avatar = self.avatar,
+                    url = "/user/%r" % self.name)
+        print(info)
+        return info
 
     def mkd(self):
         if self.desc:
@@ -176,31 +158,15 @@ class User(UserMixin, db.Model):
             return 'Err... The user is too lazy that left no descriptions', False
 
     def gender(self):
-        return ("Female" if self.sex else "Male")
+        return ("Male" if self.sex else "Female")
 
+    @classmethod
+    def indexByName(self, name):
+        return self.query.filter_by(name = name).first()
 
-@loginmanager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-class Article(db.Model):
-    __tablename__ = "articles"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True, nullable=False)
-    introduce = db.Column(db.String(100))
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
-    @property
-    def html(self):
-        return markdown(self.content)
-
-    def json(self):
-        return dict(title=self.title,
-                    author=self.user.name,
-                    introduce=self.introduce,
-                    content=self.content)
+    @classmethod
+    def indexByEmail(self, email):
+        return self.query.filter_by(email = email).first()
 
 
 class Room(db.Model):

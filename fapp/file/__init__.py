@@ -1,2 +1,1 @@
-from .bp import mfile
-from . import view, jview
+from .view import filebp as file

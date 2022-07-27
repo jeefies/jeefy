@@ -1,98 +1,127 @@
 <!DOCTYPE html>
 <html>
-	{% block html %}
-	<head>
-		{% block head %}
-		<title>Jeefy - {% block tit %}Home{% endblock %}</title>
+{% block html %}
+<head>
+	{% block head %}
+	<title>{% block title %}Jeefy - {% block title_child %}Home{% endblock title_child %}{% endblock title %}</title>
 
-		{% block icon %}
-		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico' )}}" type='image/x-icon'>
-		<link rel="icon" href="{{ url_for('static', filename='favicon.ico' )}}" type="image/x-icon">
-		{% endblock icon %}
+	{% block icon %}
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico' )}}" type='image/x-icon'>
+	<link rel="icon" href="{{ url_for('static', filename='favicon.ico' )}}" type="image/x-icon">
+	{% endblock icon %}
 
-		{% block metas %}
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta charset="utf-8">
-		{% endblock metas %}
+	{% block metas %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	{% endblock metas %}
 
-		{% block styles %}
-		<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-		{% endblock styles%}
-		
-		{% block headscripts %}
-		{% endblock headscripts %}
+	{% block styles %}
+	<link href="https://www.layuicdn.com/layui/css/layui.css" rel="stylesheet">
+	{% endblock styles %}
+	
+	{% block headscripts %}
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	{% endblock headscripts %}
 
-		{% endblock head %}
-	</head>
-	<body>
-		{% block body %}
+	{% endblock head %}
+</head>
 
-		{% block navbar %}
-		<div class="navbar navbar-inverse" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle"
-						data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="{{ url_for('main.index') }}">Jeefy</a>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li><a href="{{ url_for('user.index') }}">User</a></li>
-						<li><a href="{{ url_for('mfile.index') }}">Download</a></li>
-						<li><a href="{{ url_for('song163.index') }}">Song</a></li>
-						<li><a href="{{ url_for('room.index' )}}">Chat</a></li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						{% if current_user.is_authenticated %}
-						<li class="dropdown">
-							<a href="" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="{{ url_for('user.self') }}">Info</a></li>
-								<li><a href="{{ url_for('user.logout') }}">Log out</a></li>
-							</ul>
-						</li>
-						{% else %}
-						<li class="dropdown">
-							<a href="" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="{{ url_for('user.regist') }}">Regist</a></li>
-								<li><a href="{{ url_for('user.loginpage') }}">Log In</a></li>
-							</ul>
-						</li>
-						{% endif %}
-					</ul>
-				</div>
-			</div>
-		</div>
-		{% endblock navbar %}
-		<div class="container">
-			{% for msg in get_flashed_messages() %}
-			<div class='alert alert-info'>
-				{{ msg }}
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
-			</div>
-			{% endfor %}
-		</div>
+<body>
+	{% block body %}
 
-		<div class="container">
-		{% block content %}
-			<h2>Hello {% if current_user.is_authenticated %}{{ current_user.name }}
-				{% else %}Stranger{% endif %}</h2>
-		{% endblock content %}
-		</div>
+	{% block navbar %}
+	<ul class="layui-nav layui-bg-green" filter="">
+		<li class="layui-nav-item layui-this"><a class="layui-font-18" href="{{ url_for('main.index') }}">Jeefy</a></li>
+		<li class="layui-nav-item"><a href="{{ url_for('file.index') }}">文件管理</a></li>
+		<li class="layui-nav-item"><a href="{{ url_for('song163.index') }}">音乐</a></li>
+		<li class="layui-nav-item"><a href="{{ url_for('room.index' )}}">聊天</a></li>
+		<li class="layui-nav-item">
+			<a href=""><i class="layui-icon">&#xe66f;</i>我</a>
+			{% if user_logined() %}
+			<dl class="layui-nav-child">
+				<dd><a href="{{ url_for('user.me') }}">我的信息</a></dd>
+				<dd><a href="{{ url_for('user.signout') }}">登出</a></dd>
+			</dl>
+			{% else %}
+			<dl class="layui-nav-child">
+				<dd><a href="javascript:;" id="login">登录</a></dd>
+				<dd><a href="{{ url_for('user.register') }}">注册</a></dd>
+			</dl>
+			{% endif %}
+		</li>
+	</ul>
+	{% endblock navbar %}
+	<div class="layui-container" style="margin-top: 2vh;">
+	{% block main %}
+		<h2 class="layui-font-cyan">Hello {{ name }}</h2>
+	{% endblock main %}
+	</div>
 
-		{% endblock body %}
+	{% endblock body %}
 
-		{% block scripts %}
-		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-		<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		{% endblock scripts %}
+	{% block scripts %}
+	<script src="https://www.layuicdn.com/layui/layui.js"></script>
+	{% endblock scripts %}
 
-	</body>
-	{% endblock html %}
+	{% block messages %}
+	<script>
+function flash_message(msgs, total, i) {
+	if (i == total) {return;}
+	layui.layer.open({
+		title: false,
+		content: msgs[i], 
+		end : function() {flash_message(msgs, total, i + 1);},
+		resize: false,
+		time: 3000, // hold for 3 seconds for next
+	});
+}
+
+layui.use('layer', function(){ 
+	layer = layui.layer;
+	let msgs = new Array();
+	let total = 0;
+	{% for msg in get_flashed_messages() %}
+	msgs.push("{{ msg }}");
+	total += 1;
+	{% endfor %}
+	let i = 0;
+	flash_message(msgs, total, 0);
+});
+	</script>
+	{% endblock messages %}
+	{% block lastscript %}
+	<script>
+		layui.use(['element', 'form'], function() {
+
+		});
+
+let loginLayerIndex = -1;
+
+function close_login_layer() {
+	console.log("close_login_layer called with loginLayerIndex", loginLayerIndex);
+	if (loginLayerIndex >= 0) {
+		loginLayerIndex = -1;
+		console.log("layer.close, called");
+		layui.layer.close(loginLayerIndex);
+	}
+}
+
+let loginBtn = $("#login");
+loginBtn.bind("click", function() {
+	$.get('{{ url_for("user.login") }}', {}, function (html) {
+		loginLayerIndex = layer.open({
+			type: 1,
+			content: html,
+			area: '400px',
+		});
+	});
+});
+
+{% if activeLogin %}
+loginBtn.click()
+{% endif %}
+	</script>
+	{% endblock lastscript %}
+</body>
+{% endblock html %}
 </html>

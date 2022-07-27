@@ -6,34 +6,25 @@ views:
 """
 from functools import lru_cache
 
+from .bp import main
 from ..imps import *
-from ..reg import regist as reg
-
-from flask_login import current_user
 
 
-__all__ = ('index', "_pic", 'urls')
-
-def regist(app):
-    reg(app, globals(), __all__)
-
+@main.route('/')
 def index():
-    @lru_cache()
-    def r(cur):
-        return render_template('base.html')
-    return r(current_user)
+    cur = g.current_user
+    name = cur.userName if cur else "stranger"
+    print(request.cookies)
+    activeLogin = True if request.args.get('activeLogin') == "True" else False
+    return render_template('base.html', name = name, activeLogin = activeLogin)
 
-index.rule = '/'
-
+@main.route("/favicon.ico")
 def _pic():
     return redirect(url_for('static', filename='favicon.ico'))
 
-_pic.rule = '/favicon.ico'
-
+@main.route('/urls')
 @lru_cache()
 def urls():
     ds = dict(data = url_for('js.data'),
             self = url_for('user.listus') + '?self=true')
     return jsonify(ds)
-
-urls.rule = '/urls'

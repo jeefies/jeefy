@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block headscripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/md5.js') }}"></script>
+{% endblock %}
+
+{% block main %}
+<h1 style="font-size: 3rem; margin-bottom: 3rem; padding-left: 2rem;">{{ info['name'] }}</h1>
+
+<div class="layui-row">
+	<div class="layui-col-lg3 layui-col-md4 layui-col-sm5">
+		<div class="layui-row">
+			<div class="layui-col-lg12">
+				<div>
+					<img src="{{ info['avatar'](200) }}" class="layui-circle"></img>
+				</div>
+			</div>
+			<div class="layui-col-lg12">
+				<div class="layui-row">
+					<p>我们使用<a href="https://cravatar.cn">cravatar.cn</a>以及您的邮箱来管理您的头像</p>
+					<p>请点击以访问<a href="//cravatar.cn">cravatar.cn</a>以更改</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="layui-col-lg9 layui-col-md8 layui-col-sm7">
+		<div class="layui-row">
+			<div class="layui-col-lg12">
+				<h2>性别: {{ info['sex'] | safe }}</h2>
+			</div>
+			<div class="layui-col-lg12">
+				<h2>邮箱: {{ info['email'] }}</h2>
+			</div>
+			<div class="layui-col-lg12">
+				<h2>角色: {{ info['role'] }}</h2>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block lastscript %}
+{% endblock lastscript %}

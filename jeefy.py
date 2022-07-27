@@ -2,7 +2,7 @@
 
 import os
 from fapp import create_app, db
-from fapp.models import File, User, Room, Role, Article
+from fapp.models import File, User, Room, Role
 from flask_migrate import Migrate, upgrade, init
 
 
@@ -13,7 +13,7 @@ migrate = Migrate(app, db)
 @app.shell_context_processor
 def make():
     return dict(db=db, File=File, Room=Room,
-                Role=Role, Article=Article, User=User)
+                Role=Role, User=User)
 
 
 @app.cli.command()
@@ -30,27 +30,25 @@ def deploy():
 
 
 @app.cli.command()
-def reset():
+def resetDB():
     db.drop_all()
     _create()
 
 @app.cli.command()
-def initdb():
+def initDB():
     _create(0)
 
 @app.cli.command()
-def create():
+def createDB():
     _create()
 
 def _create(crt = True):
     if crt:
         db.create_all()
     allr = Role.checkRole()
-    admin = allr[1]
-    u1 = User(email = 'jeefy163@163.com', name = 'jeefy', password = 12345678, sex=0, role=admin)
-    u2 = User(email = 'jeefy_test@126.com', name = 'ipad', password = 12345678, sex=0, role=admin)
-    db.session.add(u1)
-    db.session.add(u2)
+    admin = Role.query.filter_by(name = 'Admin').first()
+    u = User(email = 'jeefy163@163.com', name = 'jeefy', password = 12345678, sex = True, role = admin)
+    db.session.add(u)
     db.session.commit()
 
 
