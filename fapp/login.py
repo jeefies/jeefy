@@ -21,6 +21,13 @@ class LoginManager:
         app.after_request(afterLoginHandler)
         app.add_template_global(get_current_user, "current_user")
         app.add_template_global(lambda: True if g.current_user else False, "user_logined")
+        # app.add_template_global(print, "print")
+
+    @staticmethod
+    def set_not_login_processor(processor):
+        global notLoginProcessor
+        notLoginProcessor = processor
+        # print("set notLoginProcessor to", notLoginProcessor)
 
 class UserInfo:
     userName = None
@@ -54,6 +61,9 @@ def LoginRequired(func):
     @wraps(func)
     def LoginRequiredWrapper(*args, **kwargs):
         if not g.current_user:
+            print("not login, processor:", notLoginProcessor)
+            if notLoginProcessor:
+                return notLoginProcessor()
             abort(401)
     
         if g.current_user.validLogin():
@@ -107,6 +117,6 @@ def afterLoginHandler(response):
         # print("set cookie to", cur.toCookie())
         response.set_cookie(loginStateCookieName, cur.toCookie())
     elif not cur.validLogin() or g.get('invalid_cookie', False):
-        print("del cookie, invalid_cookie is", g.get('invalid_cookie', False))
+        # print("del cookie, invalid_cookie is", g.get('invalid_cookie', False))
         response.set_cookie(loginStateCookieName, '')
     return response

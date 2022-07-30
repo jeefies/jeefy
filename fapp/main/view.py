@@ -14,7 +14,7 @@ from ..imps import *
 def index():
     cur = g.current_user
     name = cur.userName if cur else "stranger"
-    print(request.cookies)
+    # print(request.cookies)
     activeLogin = True if request.args.get('activeLogin') == "True" else False
     return render_template('base.html', name = name, activeLogin = activeLogin)
 

@@ -12,6 +12,3 @@ migrations
 *.vim
 
 github
-
-/app/templates/*/*.js
-/app/static/files/files.zip

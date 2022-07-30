@@ -89,6 +89,7 @@ layui.use('layer', function(){
 });
 	</script>
 	{% endblock messages %}
+	
 	{% block lastscript %}
 	<script>
 		layui.use(['element', 'form'], function() {
@@ -113,6 +114,7 @@ loginBtn.bind("click", function() {
 			type: 1,
 			content: html,
 			area: '400px',
+			scrollbar: false,
 		});
 	});
 });

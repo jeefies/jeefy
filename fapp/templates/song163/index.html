@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title_child %}Song in 163{% endblock %}
+
+{% block main %}
+<div>
+	<form action="{{ url_for('.gets') }}" method="POST" class="layui-form">
+		<div class="layui-form-item">
+			<label class="layui-form-label">音乐ID</label>
+			<div class="layui-input-block">
+				<input type="text" name="id" placeholder="id编号，如1440515553" lay-verify="required" autofocus="autofocus" required="required" class="layui-input" />
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit lay-filter="download" >获取资源</button> 
+			</div>
+	</form>
+</div>
+{% endblock %}
+
+{% block lastscript %}
+	<script>
+		layui.use(["form", "layer"], function() {
+			let form = layui.form;
+			let layer = layui.layer;
+
+			form.on("submit(download)", function(data) {
+				layer.open({
+					title: false,
+					content: "请稍后，正在拉去资源",
+					skin: "layui-layer-molv",
+				})
+			})
+		})
+		/*
+		layui.use(["form", "layer"], function() {
+			let form = layui.form;
+			form.on("submit(download)", function(data) {
+				let layer_index = layer.open({
+					title: false,
+					content: "请稍等，正在拉去资源",
+					skin: 'layui-layer-molv',
+					time: 3000, // close after 3s
+				})
+
+				let url = "{{ url_for('.gets') }}";
+				let xhr = new XMLHttpRequest();
+				xhr.open("GET", url, true);
+				xhr.responseType = 'blob';
+				xhr.send("id=" + data.field['id']);
+
+				xhr.onload = function(songData) {
+					console.log(this.status);
+					if (this.status == 200) {
+						layer.close(layer_index);
+
+						let blob = this.response;
+						let reader = new FileReader();
+						reader.readAsDataURL(blob);
+						console.log("Reading");
+
+						reader.onload = function(result) {
+							console.log(result);
+							console.log(result.target.result);
+							window.open(result.target.result);
+							// let a = document.createElement('a');
+							// a.href = result.target.result;
+							// console.log("href", a.href);
+							// $("body").append(a);
+							// a.click();
+							// $(a).remove();
+						}
+					}
+				}
+				return false;
+			})
+		})
+		*/
+	</script>
+{% endblock %}

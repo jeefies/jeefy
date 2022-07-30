@@ -8,8 +8,10 @@ import requests
 cr = re.compile("<title>.*?</title>")
 scr = re.compile("\s*-\s*")
 
-durl = "https://music.163.com/song/media/outer/url?id={}.mp3"
-jurl = "https://music.163.com/api/song/detail/?id={0}&ids=%5B{0}%5D"
+# download url
+download_url = "https://music.163.com/song/media/outer/url?id={}.mp3"
+# detail url
+detail_url = "https://music.163.com/api/song/detail/?id={0}&ids=%5B{0}%5D"
 #purl = "https://music.163.com/api/playlist/detail/?id={}"
 
 join = os.path.join
@@ -27,40 +29,38 @@ def init():
     ses.get('https://music.163.com')
 
 
-def getSongById(i, save=True, savedir=None, gn = True):
+def getSongById(i, save=True, savedir=None, getname = True):
     try:
-        sr = ses.get(durl.format(i))
-        if sr.content.startswith(b'<'):
+        src = ses.get(download_url.format(i))
+        if src.content.startswith(b'<'):
             raise NotFoundError('song not found')
-        if gn:
-            nr = ses.get(jurl.format(i))
+        if getname:
+            name_src = ses.get(detail_url.format(i))
     except NameError:
         init()
-        return getSongById(i, save, savedir, gn)
+        return getSongById(i, save, savedir, getname)
 
-    if gn:
+    if getname:
         try:
-            r = loads(nr.text)['songs'][0]
-            songn = r['name'].replace(' ', '_').replace('-', '_')
-            artists = r['artists']
-            for art in artists:
-                songn += '-'
-                songn += art['name'].replace(' ', '_').replace('-', '_')
-            fname = songn + '.mp3'
-        except:
+            r = loads(name_src.text)['songs'][0]
+            songn = r['name']
+            
+            artists = (artist['name'].replace(' ', '_').replace('-', '_') for artist in r['artists'])
+            fname = songn.replace(' ', '_').replace('-', '_') +  '-' + '/'.join(artists) + '.mp3'
+        except Exception as e:
             raise NotFoundError("Id %d Not found" % i)
 
     if save:
         if savedir is None:
             savedir = os.getcwd()
-        savename = fname if gn else str(i) + '.mp3'
+        savename = fname if getname else str(i) + '.mp3'
         with open(join(savedir, savename), 'wb') as f:
-            f.writelines(sr.iter_content())
+            f.writelines(src.iter_content())
         return savename
     else:
-        song = songn if gn else i
-        fn = fname if gn else None
-        return song, fn, b''.join(sr.iter_content())
+        song = songn if getname else i
+        fn = fname if getname else None
+        return song, fn, b''.join(src.iter_content())
 
 
 def main():

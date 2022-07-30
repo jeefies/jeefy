@@ -148,7 +148,7 @@ class User(db.Model):
                     description = self.desc,
                     avatar = self.avatar,
                     url = "/user/%r" % self.name)
-        print(info)
+        # print(info)
         return info
 
     def mkd(self):

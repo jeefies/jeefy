@@ -1,45 +1,46 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-		<script src="https://www.layuicdn.com/layui/layui.js"></script>
-		<link href="https://www.layuicdn.com/layui/css/layui.css" rel="stylesheet">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta charset="utf-8">
-	</head>
-	<body>
-		<div class="layui-container">
-		<form class="layui-form" action="{{ url_for('user.login_submit') }}" method="POST">
-			<div class="layui-form-item">
-				<label class="layui-form-label">用户：</label>
-				<div class="layui-input-block">
-					<input type="text" name="userName" required lay-verify="required" placeholder="请输入用户名或者邮箱地址" class="layui-input" />
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">密码：</label>
-				<div class="layui-input-block">
-					<input type="password" name="password" required lay-verify="required" placeholder="请输入密码" class="layui-input" />
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="layui-input-block">
-					<button class="layui-btn" lay-submit lay-filter="login">登录</button>
-				</div>
-			</div>
-		</form>
+{% extends "base.html" %}
+
+{% block title_child %}登陆界面{% endblock %}
+
+{% block navbar %}
+{% if needFull %}
+{{ super() }}
+{% else %}
+<div></div>
+{% endif %}
+{% endblock %}
+
+{% block main %}
+<form class="layui-form" action="{{ url_for('user.login_submit') }}" method="POST">
+	<div class="layui-form-item">
+		<label class="layui-form-label">用户：</label>
+		<div class="layui-input-block">
+			<input type="text" name="userName" required lay-verify="required" placeholder="请输入用户名或者邮箱地址" class="layui-input" />
 		</div>
-		{% block lastscript %}
-	<script>
-		layui.use('form', function() {
-			let form = layui.form;
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">密码：</label>
+		<div class="layui-input-block">
+			<input type="password" name="password" required lay-verify="required" placeholder="请输入密码" class="layui-input" />
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button class="layui-btn" lay-submit lay-filter="login">登录</button>
+		</div>
+	</div>
+</form>
+{% endblock %}
 
-			form.on("submit(login)", function(data) {
-				console.log(data.field);
-			})
+{% block lastscript %}
+<script>
+	layui.use('form', function() {
+		let form = layui.form;
 
+		form.on("submit(login)", function(data) {
+			console.log(data.field);
 		})
-	</script>
-		{% endblock lastscript %}
-	</body>
-</html>
+
+	})
+</script>
+{% endblock lastscript %}

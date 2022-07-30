@@ -12,14 +12,14 @@
 	<div class="layui-col-lg3 layui-col-md4 layui-col-sm5">
 		<div class="layui-row">
 			<div class="layui-col-lg12">
-				<div>
-					<img src="{{ info['avatar'](200) }}" class="layui-circle"></img>
+				<div id="useravatar">
+					<img layui-src="{{ info['avatar'](1000) }}" src="{{ info['avatar'](200) }}" class="layui-circle"></img>
 				</div>
 			</div>
 			<div class="layui-col-lg12">
 				<div class="layui-row">
-					<p>我们使用<a href="https://cravatar.cn">cravatar.cn</a>以及您的邮箱来管理您的头像</p>
-					<p>请点击以访问<a href="//cravatar.cn">cravatar.cn</a>以更改</p>
+					<p>我们使用<a onclick="window.open('https://cravatar.cn')">cravatar.cn</a>来管理您的头像</p>
+					<p>请点击以访问<a onclick="window.open('//cravatar.cn')">cravatar.cn</a>以更改</p>
 				</div>
 			</div>
 		</div>
@@ -36,10 +36,21 @@
 			<div class="layui-col-lg12">
 				<h2>角色: {{ info['role'] }}</h2>
 			</div>
+			<p style="content: ' '"></p>
+			<button class="layui-btn" onclick="window.open('{{ url_for("user.manager") }}')">修改信息</button>
 		</div>
 	</div>
 </div>
 {% endblock %}
 
 {% block lastscript %}
+<script>
+	layui.use('layer', function() {
+		let layer = layui.layer;
+		layer.photos({
+			photos: "#useravatar",
+			anim: 5,
+		})
+	})
+</script>
 {% endblock lastscript %}

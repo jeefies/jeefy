@@ -1,4 +1,6 @@
-from flask import Flask
+from urllib.parse import urlencode
+
+from flask import Flask, flash, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from config import config
 # from .reg import unauthorized_handler
@@ -12,6 +14,13 @@ loginManager = LoginManager()
 # loginmanager.login_view = 'user.login'
 # loginmanager.login_message = "Please log in first!"
 # loginmanager.unauthorized_callback = unauthorized_handler
+
+def unauthorized_processor():
+    flash("您还未登陆，请登陆后再查看")
+    args = {'full' : 'true', 'from' : request.path}
+    return redirect(url_for("user.login") + '?' + urlencode(args))
+
+loginManager.set_not_login_processor(unauthorized_processor)
 
 
 def create_app(cfg):
