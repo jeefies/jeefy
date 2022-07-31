@@ -2,6 +2,7 @@ from urllib.parse import urlencode
 
 from flask import Flask, flash, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 from config import config
 # from .reg import unauthorized_handler
 
@@ -9,6 +10,7 @@ from .login import LoginManager
 
 db = SQLAlchemy()
 loginManager = LoginManager()
+mail = Mail()
 # login manager config
 # loginmanager = LoginManager()
 # loginmanager.login_view = 'user.login'
@@ -37,6 +39,7 @@ def create_app(cfg):
 
     loginManager.init_app(app)
     db.init_app(app)
+    mail.init_app(app)
     # loginmanager.init_app(app)
 
     from .main import main as main_bp
