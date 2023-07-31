@@ -2,6 +2,9 @@ import os
 import re
 import sys
 from json import loads
+from threading import Thread
+from functools import lru_cache
+
 import requests
 
 
@@ -28,27 +31,39 @@ def init():
                                        "/83.0.4103.116 Safari/537.36")})
     ses.get('https://music.163.com')
 
+@lru_cache()
+def getSongSource(i):
+    return ses.get(download_url.format(i))
+
+@lru_cache()
+def getSongInfo(i):
+    return loads(ses.get(detail_url.format(i)).text)['songs'][0]
+    raise NotFoundError(f"Song ID {i} not found")
+
+@lru_cache()
+def getSongName(i):
+    return getSongInfo(i)['name']
+
+@lru_cache()
+def getArtistsName(i):
+    return [artist['name'].replace(' ', '_').replace('-', '_') for artist in getSongInfo(i)['artists']]
 
 def getSongById(i, save=True, savedir=None, getname = True):
     try:
-        src = ses.get(download_url.format(i))
+        src = getSongSource(i)
         if src.content.startswith(b'<'):
-            raise NotFoundError('song not found')
-        if getname:
-            name_src = ses.get(detail_url.format(i))
+            raise NotFoundError('Song ID %d not found' % i)
     except NameError:
         init()
         return getSongById(i, save, savedir, getname)
 
     if getname:
         try:
-            r = loads(name_src.text)['songs'][0]
-            songn = r['name']
-            
-            artists = (artist['name'].replace(' ', '_').replace('-', '_') for artist in r['artists'])
-            fname = songn.replace(' ', '_').replace('-', '_') +  '-' + '/'.join(artists) + '.mp3'
-        except Exception as e:
-            raise NotFoundError("Id %d Not found" % i)
+            info = getSongInfo(i)
+            songn = getSongName(i)
+            fname = songn.replace(' ', '_').replace('-', '_') +  '-' + '/'.join(getArtistsName(i)) + '.mp3'
+        except:
+            getname = False
 
     if save:
         if savedir is None:

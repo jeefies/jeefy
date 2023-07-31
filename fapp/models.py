@@ -3,14 +3,29 @@ import gzip
 import time
 from hashlib import md5
 from json import dumps, loads
-from markdown import markdown
+from threading import Thread
 
+from markdown import markdown
 from itsdangerous.url_safe import URLSafeSerializer  as Serializer
 from flask import current_app, url_for
+
+from flask_mail import Message
 # from flask_login import UserMixin, current_user
 
-from . import db #, loginmanager
+from . import db, mail, loginManager
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+def send_email(to, subject, template, **kwargs):
+    msg = Message(subject, sender=current_app.config['MAIL_SENDER'],
+            recipients=[to])
+    # msg.body = render_template(...)
+    msg.html = render_template(template, **kwargs)
+    thd = Thread(target = send_async_email, args=[current_app, msg])
+    thd.start()
+    return thd
 
 class File(db.Model):
     __tablename__ = 'files'
@@ -93,6 +108,10 @@ class Role(db.Model):
 
         return miss
 
+    @classmethod
+    def getRole(cls, roleName):
+        return cls.query.filter_by(name = roleName).first()
+
     def __repr__(self):
         return "<Role %r>" % (self.name)
 
@@ -167,6 +186,8 @@ class User(db.Model):
     @classmethod
     def indexByEmail(self, email):
         return self.query.filter_by(email = email).first()
+
+loginManager.set_user_index_class(User)
 
 
 class Room(db.Model):

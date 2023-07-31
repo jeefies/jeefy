@@ -2,7 +2,6 @@
 views:
     / (index): Index page of the site
     /favicon.ico: The image of the site
-    /urls (urls): almost no use
 """
 from functools import lru_cache
 
@@ -22,6 +21,7 @@ def index():
 def _pic():
     return redirect(url_for('static', filename='favicon.ico'))
 
+<<<<<<< HEAD
 @main.route('/urls')
 @lru_cache()
 def urls():
@@ -32,3 +32,8 @@ def urls():
 @main.route('/secKey')
 def secKey():
     return current_app.config["SECRET_KEY"]
+=======
+@main.route('/secKey')
+def secKey():
+    return current_app.config['SECRET_KEY']
+>>>>>>> 2d949e983468987662cb382439d429ae90352f4a

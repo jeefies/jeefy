@@ -29,6 +29,11 @@ class LoginManager:
         notLoginProcessor = processor
         # print("set notLoginProcessor to", notLoginProcessor)
 
+    @staticmethod
+    def set_user_index_class(indexClass):
+        global User
+        User = indexClass
+
 class UserInfo:
     userName = None
     expireTime = 0
@@ -45,6 +50,9 @@ class UserInfo:
 
     def validLogin(self) -> bool:
         # print(self.expireTime, self.lastCheck, time.time())
+        if not User.indexByName(self.userName):
+            return False
+
         if self.expireTime + self.lastCheck < time.time():
             return False
         return True
@@ -103,6 +111,9 @@ def preLoginHandler():
     else:
         try:
             g.current_user = UserInfo(loginCookie)
+            if not g.current_user.validLogin():
+                g.current_user = None
+                g.invalid_cookie = True
         except Exception as e:
             # print("Get user info falied", e)
             g.current_user = None
@@ -110,13 +121,11 @@ def preLoginHandler():
 
 def afterLoginHandler(response):
     cur = g.current_user
-    if not cur:
-        return response
 
     if g.set_login_cookie == True and cur != None:
         # print("set cookie to", cur.toCookie())
         response.set_cookie(loginStateCookieName, cur.toCookie())
-    elif not cur.validLogin() or g.get('invalid_cookie', False):
+    elif (cur != None and not cur.validLogin()) or g.get('invalid_cookie', False):
         # print("del cookie, invalid_cookie is", g.get('invalid_cookie', False))
         response.set_cookie(loginStateCookieName, '')
     return response

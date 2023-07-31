@@ -4,11 +4,18 @@
 
 {% block main %}
 <div>
-	<form action="{{ url_for('.gets') }}" method="POST" class="layui-form">
+	<form action="{{ url_for('.gets') }}" method="POST" class="layui-form" id="submit-form">
 		<div class="layui-form-item">
 			<label class="layui-form-label">音乐ID</label>
 			<div class="layui-input-block">
 				<input type="text" name="id" placeholder="id编号，如1440515553" lay-verify="required" autofocus="autofocus" required="required" class="layui-input" />
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">获取需要</label>
+			<div class="layui-input-block">
+				<input type="radio" name="raw" value="download" title="下载源文件" checked>
+				<input type="radio" name="raw" value="raw" title="直接播放">
 			</div>
 		</div>
 		<div class="layui-form-item">
@@ -21,15 +28,59 @@
 
 {% block lastscript %}
 	<script>
+		var audio;
 		layui.use(["form", "layer"], function() {
 			let form = layui.form;
 			let layer = layui.layer;
 
 			form.on("submit(download)", function(data) {
+				if (data.field['raw'] == 'raw') {
+					let item = document.createElement("div");
+					item.className = "layui-form-item";
+
+					$("#submit-form").append(item);
+					
+					let label = document.createElement("label");
+					label.className = "layui-form-label";
+					label.innerHTML = "正在播放"
+
+					item.appendChild(label);
+
+					let block = document.createElement("div");
+					block.className = "layui-input-block";
+
+					item.appendChild(block);
+
+					let audio = document.createElement("audio");
+					audio.src = "{{ url_for(".gets") }}?id=" + data.field['id'];
+					audio.controls = "controls";
+					audio.play();
+
+					block.appendChild(audio);
+
+					let word_aux = document.createElement("div");
+					word_aux.className = "layui-form-mid layui-word-aux";
+					$.get("{{ url_for('.getname') }}?id=" + data.field['id'], null, function(result) {
+						console.log(result);
+						if (result['status'] = true) {
+							word_aux.innerHTML = result['songname'];		
+						} else {
+							layer.open({
+								title: false,
+								content: "无法获取到ID为" + data.field['id'] + "的音乐信息\n错误原因：" + result['reason'],
+							});
+						}
+					})
+
+					block.appendChild(word_aux);
+					return false;
+				}
+
 				layer.open({
 					title: false,
 					content: "请稍后，正在拉去资源",
 					skin: "layui-layer-molv",
+					time: 5000,
 				})
 			})
 		})

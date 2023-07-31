@@ -1,5 +1,127 @@
 {% extends "base.html" %}
 
 {% block main %}
+<h1 class="layui-font-cyan">注册</h1>
+<form class="layui-form" action="{{ url_for('user.register_submit') }}" method="POST" lay-filter="signup-main">
+	<div class="layui-form-item">
+		<label class="layui-form-label">用户名</label>
+		<div class="layui-input-block">
+			<input class="layui-input" id="name" type='text' name="name" required lay-verify="required|username" placeholder="请输入用户名" />
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">邮箱</label>
+		<div class="layui-input-block">
+			<input class="layui-input" type='text' id='email' name='email' required lay-verify="required|email" placeholder="请输入邮箱" />
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">性别</label>
+		<div class="layui-input-block">
+			<input type="radio" name="sex" value="1" checked title='男'></input>
+			<input type="radio" name="sex" value="0" title="女"></input>
+		</div>
+	</div>
 
+	<div class="layui-form-item">
+		<label class="layui-form-lable">角色</label>
+		<div class="layui-input-block">
+			<select name="role" lay-verify="required">
+				<option value="">请选择您的角色</option>
+				<option value="Stduent">学生</option>
+				<option value="Teacher">教师</option>
+				<option value="Worker">打工人</option>
+				<option value="Other">其他</option>
+			</select>
+		</div>
+		<div class="layui-input-block">
+			<div class="layui-word-aux">这对以后的使用没有任何影响</div>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">密码</label>
+		<div class="layui-input-block">
+			<input class="layui-input" type="password" name="password" required lay-verify="required|pwd">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">再次确认密码</label>
+		<div class="layui-input-block">
+			<input class="layui-input" type="password" name="password-confirm" required lay-verify="required|pwd">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button class="layui-btn" lay-submit lay-filter="signup">注册</button>
+		</div>
+	</div>
+
+</form>
 {% endblock main %}
+
+{% block lastscript %}
+<script>
+
+layui.use(['form', 'layer'], function() {
+	let form = layui.form;
+	let layer = layui.layer;
+	
+	{% if fill %}
+	form.val("signup-main", {
+	{% for k in olds %}
+		"{{ k }}": "{{ olds[k] }}",
+	{% endfor %}
+	});
+	{% endif %}
+
+	form.verify({
+		username: function(value, item) {
+			if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+				return '用户名不能有特殊字符';
+			}
+			if(/(^\_)|(\__)|(\_+$)/.test(value)) {
+				return '用户名首尾不能出现下划线\'_\'';
+			}
+			if(/^\d+\d+\d$/.test(value)) {
+				return '用户名不能全为数字';
+			}
+			if (value.length < 3 || value.length > 20) {
+				return '用户名必须在4～20个字符以内'
+			}
+		},
+		pwd: [
+			/^[\S]{6,12}$/,
+			'密码必须6到12位，且不能出现空格',
+		]
+	})
+
+	form.on("submit(signup)", function(data) {
+		console.log("submit");
+		if (data.field['password'] != data.field['password-confirm']) {
+			layer.open({
+				title: '密码不匹配',
+				content: '您两次输入的密码不一样，请重新输入',
+				icon: 5,
+				anim: 6,
+			})
+			return false;
+		}
+
+		/*
+		let nameValid = checkName();
+		if (nameValid == false) {
+			return false;
+		}
+
+		let emailValid = checkEmail();
+		if (emailValid == false) {
+			return false;
+		}
+		*/
+	})
+})
+</script>
+{% endblock %}

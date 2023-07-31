@@ -1,8 +1,7 @@
 """
 views:
     / (index): Main page to get the song by id
-    /get?Id=... (gets): get the song by id, return a file (type='octet-stream')
-    /raw?Id=... (raws): return the raw song (type='audio/mp3')
+    /get?Id=... (gets): get the song by id, return a file (type='audio/mp3')
 """
 import io
 import gzip
@@ -10,10 +9,12 @@ import gzip
 from .bp import song
 from ..imps import *
 # The main file to get the song
-from .g163byid import init, getSongById, NotFoundError
+from .g163byid import getSongById, getSongName, NotFoundError
+from .g163byid import init as init_song163
 
 from functools import lru_cache
 
+init_song163()
 
 @song.route('/')
 def index():
@@ -41,50 +42,39 @@ def gets():
         sid = int(request.values.get('id'))
     except:
         # if the id is not plain digits, return a error message.
-        print(request.values)
-        flash("Error song Id!")
+        flash("错误的音乐ID")
         return redirect(url_for('.index'))
+
     try:
         return get(sid)
     except NotFoundError:
         # No such song according to the id
-        flash("Error song Id!")
+        flash("没有找到这首歌！")
         return redirect(url_for('.index'))
 
 def get(sid):
     # song-name file-name bytes-source
-    @lru_cache()
-    def cache_get(isid):
-        return getSongById(isid, False)
-
-    songn, filen, src = cache_get(sid)
-
+    songn, filen, src = getSongById(sid, False, getname = request.values.get("raw") != "raw")
     # print("Got it!")
     file = io.BytesIO(src)
     file.seek(0)
-    # rsp = make_response(sc)
-    # let browser know it's the file to download
-    # rsp.headers['Content-Disposition'] = (b"attachment;filename=%s" % (fn.encode('utf-8'))).decode('latin-1')
-    # rsp.headers['Content-Type'] = "application/octet-stream"
+
+    as_attachment = True
+    if request.values.get("raw") == "raw":
+        as_attachment = False
     return send_file(file, "audio.mp3", True, filen, filen)
 
-@song.route('/raw')
-def raws():
-    # the same as gets
+@song.route('/name', methods=["GET", "POST"])
+def getname():
     try:
-        sid = int(request.values.get('id'))
-    except ValueError:
-        return "Error Song Id!"
-    try:
-        return raw(sid)
-    except NotFoundError:
-        flash("Error song Id!")
-        return redirect(url_for('.index'))
+        sid = int(request.values.get("id"))
+    except:
+        return jsonify({'status': False, 'reason': "没有给定的音乐ID"})
 
-@lru_cache()
-def raw(sid):
-    # use _ to let the place empty, need only source
-    _, _, sc = getSongById(sid, False, gn=False)
-    rsp = mkrsp(sc)
-    rsp.headers['Content-Type'] = "audio/mp3"
-    return rsp
+    try:
+        songn = getSongName(sid)
+    except NotFoundError:
+        return jsonify({'status': False, 'reason': f"没有找到ID为{sid}的音乐"})
+
+    print("song name", songn)
+    return jsonify({'status': True, 'songname': songn})
