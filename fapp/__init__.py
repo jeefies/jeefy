@@ -56,4 +56,7 @@ def create_app(cfg):
 
     from .song163 import song as song_bp
     app.register_blueprint(song_bp, url_prefix="/song163")
+
+    from .luoguGame import luoguGame as luoguGame_bp
+    app.register_blueprint(luoguGame_bp, url_prefix="/luoguGame")
     return app

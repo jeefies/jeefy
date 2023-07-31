@@ -14,7 +14,7 @@ from .g163byid import init as init_song163
 
 from functools import lru_cache
 
-init_song163()
+# init_song163()
 
 @song.route('/')
 def index():

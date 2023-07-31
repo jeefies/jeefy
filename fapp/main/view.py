@@ -21,19 +21,6 @@ def index():
 def _pic():
     return redirect(url_for('static', filename='favicon.ico'))
 
-<<<<<<< HEAD
-@main.route('/urls')
-@lru_cache()
-def urls():
-    ds = dict(data = url_for('js.data'),
-            self = url_for('user.listus') + '?self=true')
-    return jsonify(ds)
-
-@main.route('/secKey')
-def secKey():
-    return current_app.config["SECRET_KEY"]
-=======
 @main.route('/secKey')
 def secKey():
     return current_app.config['SECRET_KEY']
->>>>>>> 2d949e983468987662cb382439d429ae90352f4a
