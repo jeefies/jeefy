@@ -19,7 +19,7 @@ def generate():
     
     print(f"{ns} {base64.b64encode(ct)}")
     
-    img = qrcode.make(base64.b64encode(ct))
+    img = qrcode.make(base64.b64encode(ct).strip(b"="))
 
     bio = BytesIO()
     img.save(bio, "jpeg")
